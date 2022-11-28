@@ -29,7 +29,6 @@ exports.deleteOrder = async (req, res, next) => {
 };
 
 exports.getAllOrders = async (req, res) => {
-    console.log("get all orders");
     try {
         const docs = await Order.find();
         res.status(200).json({

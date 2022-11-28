@@ -25,25 +25,61 @@ exports.createUser = async (req, res) => {
 
 exports.logIn = async (req, res) => {
     try {
-        const user = await User.findOne({
-            email: req.body.email,
-        });
+        if (!req.body.oAuth) {
+            const user = await User.findOne({
+                email: req.body.email,
+            });
 
-        if (!user) {
-            return res.status(404).json({ message: "user not found" });
-        }
+            if (!user) {
+                return res.status(404).json({ message: "user not found" });
+            }
 
-        const hastPassword = cryptoJs.AES.decrypt(
-            user.password,
-            process.env.CRYPTO_SECRET
-        );
+            const hastPassword = cryptoJs.AES.decrypt(
+                user.password,
+                process.env.CRYPTO_SECRET
+            );
 
-        const password = hastPassword.toString(cryptoJs.enc.Utf8);
+            const password = hastPassword.toString(cryptoJs.enc.Utf8);
 
-        if (password !== req.body.password) {
-            return res.status(404).json({ message: "incorrect password" });
-        } else {
-            //* access token
+            if (password !== req.body.password) {
+                return res.status(404).json({ message: "incorrect password" });
+            } else {
+                //* access token
+                const token = jwt.sign(
+                    {
+                        id: user._id,
+                        isAdmin: user.isAdmin,
+                    },
+                    process.env.JWT_SECRET,
+                    {
+                        expiresIn: "5m",
+                    }
+                );
+                //* refresh token
+                const refreshToken = jwt.sign(
+                    { id: user._id },
+                    process.env.JWT_SECRET,
+                    { expiresIn: "100d" }
+                );
+                //* passing refresh token as cookie
+                //* signin in postman and you will get cookies below "Send" button
+                res.cookie("jwt", refreshToken, {
+                    httpOnly: true,
+                });
+                res.status(200).json({
+                    message: "success",
+                    token: token,
+                });
+            }
+        } else if (req.body.oAuth) {
+            let user = await User.findOne({
+                email: req.body.email,
+            });
+
+            if (!user) {
+                user = await User.create(req.body);
+            }
+
             const token = jwt.sign(
                 {
                     id: user._id,
@@ -54,14 +90,11 @@ exports.logIn = async (req, res) => {
                     expiresIn: "5m",
                 }
             );
-            //* refresh token
             const refreshToken = jwt.sign(
                 { id: user._id },
                 process.env.JWT_SECRET,
                 { expiresIn: "100d" }
             );
-            //* passing refresh token as cookie
-            //* signin in postman and you will get cookies below "Send" button
             res.cookie("jwt", refreshToken, {
                 httpOnly: true,
             });
@@ -71,12 +104,14 @@ exports.logIn = async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json(err);
+        res.status(500).json({
+            status: "error",
+            message: err.message,
+        });
     }
 };
 
 exports.logOut = (req, res) => {
-    "logout cookie", req.cookies;
     try {
         const cookies = req.cookies;
         if (!cookies.jwt) return res.sendStatus(204);
@@ -92,9 +127,7 @@ exports.logOut = (req, res) => {
 
 //* when access token expires
 exports.refresh = async (req, res) => {
-    "refresh cookie", req.cookies;
     const cookies = req.cookies;
-    "cookies", cookies;
     if (!cookies.jwt)
         return res.status(401).json({
             status: "unauthorised",
@@ -128,7 +161,6 @@ exports.refresh = async (req, res) => {
 //? 4 - very important
 exports.verifyToken = (req, res, next) => {
     const { authorization } = req.headers;
-    authorization;
     if (authorization) {
         const authToken = authorization.split(" ")[1];
         jwt.verify(authToken, process.env.JWT_SECRET, (err, user) => {
