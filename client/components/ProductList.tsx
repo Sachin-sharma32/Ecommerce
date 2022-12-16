@@ -4,41 +4,38 @@ import { ColorRing } from "react-loader-spinner";
 import { useGetProducts } from "../hooks/useProduct";
 import Error from "../utils/error";
 import { Product } from "../utils/types";
+import MessageModel from "../utils/messageModel";
 
 interface AppProps {
-    sort?: string;
-    color?: string;
-    size?: string;
-    category?: string;
-    limit?: boolean;
+    sort?: string,
+    color?: string,
+    size?: string,
+    search?: string,
+    limit?: boolean,
+    featured?: boolean
 }
 
-const ProductList = ({ sort, color, size, category, limit }: AppProps) => {
-    let { isLoading, isError, error, data: products } = useGetProducts();
+const ProductList = ({ sort, color, size, search, limit, featured }: AppProps) => {
+    const onSuccess = () => {
+    }
+    let { isLoading, isError, error, data: products } = useGetProducts(onSuccess);
 
     if (limit) {
         products = products?.slice(0, 8);
     }
 
-    const selectedCategory = category?.toLowerCase();
 
-    if (selectedCategory) {
-        if (selectedCategory === "wedding") {
-            products = products?.filter((item: Product) => {
-                return item.category.includes("wedding");
-            });
-        } else if (selectedCategory === "shirts") {
-            products = products?.filter((item: Product) => {
-                return (
-                    item.category.includes("shirt") ||
-                    item.category.includes("tshirt")
-                );
-            });
-        } else if (selectedCategory === "party") {
-            products = products?.filter((item: Product) => {
-                return item.category.includes("party");
-            });
-        }
+    if (search) {
+        products = products?.filter((item: Product) => {
+            return (
+                item.category.includes(search) ||
+                item.collectionName.includes(search) ||
+                item.title.includes(search) ||
+                item.color.includes(search) ||
+                item.desc.includes(search) ||
+                item.size.includes(search)
+            );
+        });
     }
 
     if (sort && products) {
@@ -79,8 +76,15 @@ const ProductList = ({ sort, color, size, category, limit }: AppProps) => {
         }
     }
 
+    if (featured) {
+        products = products?.filter((product) => {
+            return product.featured
+        })
+    }
+
     return (
-        <div className=" p-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2 relative mt-4">
+        <div className=" p-10 mt-4 justify-center relative">
+            {products?.length === 0 && <MessageModel>No products found</MessageModel>}
             {isLoading ? (
                 <div className=" absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                     <ColorRing
@@ -102,13 +106,13 @@ const ProductList = ({ sort, color, size, category, limit }: AppProps) => {
             ) : isError ? (
                 <Error error={error.response.data.message} />
             ) : products ? (
-                products.map((product: Product) => (
-                    <ProductListCard key={product._id} product={product} />
-                ))
-            ) : (
-                <div className=" bg-red-500 p-10 flex justify-center text-white rounded-lg">
-                    LogIn To See All Products
+                <div className="grid__container">
+                    {products.map((product: Product) => (
+                        <ProductListCard key={product._id} product={product} />
+                    ))}
                 </div>
+            ) : (
+                <Error className="p-10">LogIn To See All Products</Error>
             )}
         </div>
     );

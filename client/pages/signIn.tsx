@@ -18,150 +18,176 @@ import Error from "../utils/error";
 import { useGetMe } from "../hooks/useAuth";
 import { signIn, useSession } from "next-auth/react";
 import { State } from "../utils/types";
+import { motion } from "framer-motion";
+import Smooth from "../utils/smooth";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import SuccessModel from "../utils/successModel";
+import ErrorModel from "../utils/errorModel";
+import Head from "next/head";
+import EastIcon from "@mui/icons-material/East";
 
 const SignInUser = () => {
     const dispatch = useDispatch();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
-    };
-    const passwordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value);
-    };
+
+    const [success, setSuccess] = useState(false);
 
     const token = useSelector((state: State) => state.auth.accessToken);
-    if (token) {
-        router.push("/");
-    }
 
     const { data: session } = useSession();
-
     const onSuccess = (data: any) => {
         dispatch(setToken(data.data.token));
-        router.push("/");
+        setSuccess(true);
+        setTimeout(() => {
+            setSuccess(false);
+            router.push("/");
+        }, 1000);
     };
+
+    const onError = (error) => {};
 
     const {
         mutate: loginUser,
         isLoading,
         isError,
         error,
-    } = useLogin(onSuccess);
+    } = useLogin(onSuccess, onError);
 
-    const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const user = {
-            email,
-            password,
-        };
-        loginUser(user);
+    const submitHandler = async (values) => {
+        loginUser(values);
     };
 
     const signInGoogle = async () => {
         signIn("google");
-        const user = {
-            name: session.user.name,
-            email: session.user.email,
-            img: session.user.image,
-            oAuth: true,
-        };
-        loginUser(user);
     };
 
-    if (isLoading) {
-        return <Spinner />;
-    } else {
-        return (
-            <div className=" min-h-screen relative mt-[6rem] m-auto w-fit">
-                <div className=" w-fit p-10 text-center shadow-lg">
-                    <div className=" text-center m-auto w-fit">
+    useEffect(() => {
+        if (session) {
+            const user = {
+                name: session?.user.name,
+                email: session?.user.email,
+                img: session?.user.image,
+                oAuth: true,
+            };
+            loginUser(user);
+        }
+    }, [session, loginUser]);
+
+    const validationObject = yup.object({
+        email: yup.string().email("please provide a valid email").required(),
+        password: yup.string().required(),
+    });
+
+    const formik = useFormik({
+        initialValues: { email: "", password: "" },
+        onSubmit: submitHandler,
+        validateOnBlur: true,
+        validationSchema: validationObject,
+    });
+
+    return (
+        <Smooth className=" min-h-screen flex justify-center items-center bg-gradient-to-r from-gray-100 to-gray-200 text-gray-500 text-xs">
+            <Head>
+                <title>Myntra - logIn</title>
+                <link
+                    rel="icon"
+                    type="image/png"
+                    href="https://images.indianexpress.com/2021/01/myntra.png"
+                />
+                <meta
+                    name="description"
+                    content="The only online store you will need to fulfill all your needs"
+                />
+            </Head>
+            {success && <SuccessModel>Logged in successfully</SuccessModel>}
+            {isError && <ErrorModel>{error?.response.data.message}</ErrorModel>}
+            <div className="mt-[4rem] grid grid-cols-1 lg:grid-cols-2 form__background  h-fit shadow-2xl justify-items-center min-w-[70vw] max-w-[90%]">
+                <div className=" w-fit p-10 text-center flex flex-col gap-4">
+                    <div className=" text-center m-auto w-fit flex flex-col items-center">
                         <img
                             src="/myntra.png"
                             width={100}
                             height={100}
                             alt="img"
                         />
+                        <h2 className=" text-lg font-semibold text-gray-800">
+                            WELCOME TO MYNTRA
+                        </h2>
                     </div>
-                    <h2 className=" text-2xl font-semibold">
-                        Welcome to Myntra
-                    </h2>
                     <form
-                        className=" mt-6 flex flex-col items-center"
-                        onSubmit={submitHandler}
+                        className=" items-center"
+                        onSubmit={formik.handleSubmit}
                     >
-                        {isError && (
-                            <Error error={error?.response?.data.message} />
-                        )}
-                        <div className=" flex flex-col items-start ">
-                            <label htmlFor="email" className=" text-md">
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                className=" p-3 w-60 outline-none bg-white border-2 border-blue-400 rounded-lg"
-                                onChange={emailChangeHandler}
-                            />
+                        <div className=" grid grid-cols-1 gap-6 gap-y-2">
+                            <div className=" flex flex-col items-start ">
+                                <label htmlFor="email" className=" text-md">
+                                    Email
+                                </label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    className=" p-2 w-60 outline-none bg-white  rounded-sm focus:shadow-lg"
+                                    onChange={formik.handleChange}
+                                    value={formik.values.email}
+                                    onBlur={formik.handleBlur}
+                                    required
+                                />
+                                <Error
+                                    className={
+                                        formik.errors.email
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                    }
+                                >
+                                    {formik.errors.email
+                                        ? formik.errors.email
+                                        : ""}ADbg-white  rounded-sm focus:shadow-lg"
+                                    onChange={formik.handleChange}
+                                    value={formik.values.password}
+                                    onBlur={formik.handleBlur}
+                                    required
+                                />
+                                <Link
+                                    href="/forgotPassword"
+                                    className="flex items-center gap-1 hover:gap-4 transition-all duration-200 hover:border-b-gray-500 border-b border-b-transparent"
+                                >
+                                    <p>Forgot Password</p>
+                                    <EastIcon />
+                                </Link>
+                                <Error
+                                    className={
+                                        formik.errors.password
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                    }
+                                >
+                                    {formik.errors.password
+                                        ? formik.errors.password
+                                        : ""}
+                                </Error>
+                            </div>
                         </div>
-                        <div className=" flex flex-col items-start ">
-                            <label htmlFor="password" className=" text-md">
-                                Password
-                            </label>
-                            <input
-                                type="password"
-                                name="password"
-                                className=" p-3 w-60 outline-none bg-white border-2 border-blue-400 rounded-lg"
-                                onChange={passwordChangeHandler}
-                            />
-                        </div>
-                        <Link
-                            href="/forgot-password"
-                            className=" text-sm w-60 text-left"
-                        >
-                            Foregot your password?
-                        </Link>
                         <button
-                            className=" bg-blue-400 px-10 py-2 rounded-lg hover:bg-blue-200 transition-all duration-200 mt-4 w-60"
+                            className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-sm hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200 mt-4 w-60"
                             type="submit"
+                            disabled={!formik.isValid}
                         >
                             LOG IN
                         </button>
                     </form>
-                    <h5 className=" mt-6">OR</h5>
-                    <div className="flex flex-col items-center gap-2">
+                    <div className="flex flex-col w-full justify-center items-center gap-2">
                         <button
                             onClick={signInGoogle}
-                            className=" bg-blue-400 px-10 py-2 w-fit rounded-lg hover:bg-blue-200 transition-all duration-200"
+                            className=" active:translate-y-5 border border-black text-black px-4 py-2 rounded-sm transition-all duration-200 w-60 flex gap-4 justify-center items-center"
                         >
-                            <GoogleIcon className=" mr-2" /> Continue with
-                            Google
+                            <img src="/google.png" className=" w-6" />{" "}
+                            <p>Continue with google</p>
                         </button>
                     </div>
-                    <div className=" text-sm">
-                        <div className=" mt-10 text-gray-500">
-                            By continuing you agree to Myntra's <br />{" "}
-                            <span className=" text-black font-semibold">
-                                Terms of Service
-                            </span>{" "}
-                            and asknowledge you've read our{" "}
-                            <span className=" text-black font-semibold">
-                                Privacy Policy
-                            </span>
-                        </div>
-                        <div className=" mt-2 flex justify-center gap-2 items-center">
-                            Not on Myntra yet?{" "}
-                            <Link href="/register" className=" text-blue-500">
-                                Register
-                            </Link>
-                        </div>
-                        <p className=" text-gray-500">
-                            Are you a business? Get started here!
-                        </p>
-                    </div>
                 </div>
+                <div className=" "></div>
             </div>
-        );
-    }
+        </Smooth>
+    );
 };
-
 export default SignInUser;

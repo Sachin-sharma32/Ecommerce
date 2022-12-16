@@ -1,159 +1,38 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setTotal } from "../app/slices";
 import { createOrder } from "../app/orderSlice";
-import { useGetCart } from "../hooks/useCart";
 import { ProductWithDetails, ProductWithQuantity, State } from "../utils/types";
 import ErrorBoundry from "../utils/ErrorBoundry";
+import Smooth from "../utils/smooth";
+import Head from "next/head";
+import axios from "axios";
+import { create } from "@mui/material/styles/createTransitions";
+import { useCreateOrder } from "../hooks/useOrder";
+import SuccessModel from "../utils/successModel";
+import { useRouter } from "next/router";
+import EastIcon from '@mui/icons-material/East';
+import WestIcon from '@mui/icons-material/West';
+
 
 const Success = () => {
-    useEffect(() => {
-        dispatch(setTotal());
-    });
-
-    const user = useSelector((state: State) => state.auth.user);
-    const { data: cart } = useGetCart(user?._id);
-
-    const totalPrice = cart?.products.reduce((acc: number, item: ProductWithQuantity) => {
-        return acc + item.quantity * item.product.price;
-    }, 0);
-
-    const products = cart?.products.map((item: ProductWithDetails) => {
-        return { product: item.product._id };
-    });
-
-    useMemo(() => { products }, [products])
-
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        {
-            user &&
-                products &&
-                dispatch(
-                    createOrder({
-                        user: user._id,
-                        products,
-                        amount: totalPrice,
-                        address: user.address,
-                    })
-                );
-        }
-    }, [user, products, dispatch, totalPrice]);
-
 
     return (
-        <div className=" min-h-screen mt-[6rem] px-10 text-lg">
-            <h1 className=" w-fit m-auto text-5xl font-semibold">
-                ORDER PLACED SUCCESSFULLY{" "}
-            </h1>
-            <div className="flex justify-between mt-10">
-                <Link
-                    href="/"
-                    className=" border-2 border-black hover:border-white rounded-lg flex justify-center items-center px-2 hover:bg-black hover:text-white transition-all duration-200"
-                >
-                    CONTINUE SHOPPING
-                </Link>
-            </div>
-
-            <div className="grid grid-cols-1 mt-20 lg:grid-cols-2 gap-10 justify-items-center">
-                <div className="flex flex-col gap-10">
-                    <ErrorBoundry>
-                        {cart &&
-                            cart.products.map((item) => (
-                                <div key={item.product._id} className="flex gap-40 lg:gap-10 border-b-2 pb-2 justify-center items-center">
-                                    <div className="">
-                                        <img
-                                            src={item.product.img}
-                                            width={200}
-                                            height={200}
-                                            alt="img"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <p>
-                                            <span className=" font-semibold">
-                                                Product:
-                                            </span>{" "}
-                                            {item.product.title}
-                                        </p>
-                                        <p>
-                                            <span className=" font-semibold">
-                                                ID:
-                                            </span>
-                                            {item.product._id}
-                                        </p>
-                                        <div className="w-5 h-5 bg-black rounded-full"></div>
-                                        <p>
-                                            <span className=" font-semibold">
-                                                Size:
-                                            </span>
-                                            : {item.product.size}
-                                        </p>
-                                    </div>
-                                    <div className=" text-lg">
-                                        <p className=" w-24">
-                                            Quantity: {item.quantity}
-                                        </p>
-                                        <p>Rs. {item.product.price}</p>
-                                    </div>
-                                </div>
-                            ))}
-                    </ErrorBoundry>
-                </div>
-                <div className=" border-2 w-fit p-4 flex flex-col gap-4 rounded-lg">
-                    <h2 className=" text-4xl">ORDER DETAILS</h2>
-                    <p>
-                        <span className=" font-semibold">Subtotal:</span> Rs.{" "}
-                        {totalPrice}
-                    </p>
-                    <p>
-                        <span className=" font-semibold">Total:</span> Rs.{" "}
-                        {totalPrice}
-                    </p>
-                    {user?.address && (
-                        <ErrorBoundry>
-                            <p className=" text-xl font-bold">Shipping To: </p>
-                            <p className=" text-sm font-semibold">
-                                House:{" "}
-                                <span className=" font-normal">
-                                    {user.address.house}
-                                </span>
-                            </p>
-                            <p className=" text-sm font-semibold">
-                                Street:{" "}
-                                <span className=" font-normal">
-                                    {user.address.street}
-                                </span>
-                            </p>
-                            <p className=" text-sm font-semibold">
-                                Area:{" "}
-                                <span className=" font-normal">
-                                    {user.address.area}
-                                </span>
-                            </p>
-                            <p className=" text-sm font-semibold">
-                                City:{" "}
-                                <span className=" font-normal">
-                                    {user.address.city}
-                                </span>
-                            </p>
-                            <p className=" text-sm font-semibold">
-                                State:{" "}
-                                <span className=" font-normal">
-                                    {user.address.state}
-                                </span>
-                            </p>
-                            <p className=" text-sm font-semibold">
-                                Country:{" "}
-                                <span className=" font-normal">
-                                    {user.address.country}
-                                </span>
-                            </p>
-                        </ErrorB>
-                    )}
+        <div className=" min-h-screen flex items-center justify-center text-xs text-center">
+            <div>
+                <h1 className="font-semibold text-lg">Order Placed SuccessFully</h1>
+                <p>Your order will be safely delivered to your doorsteps.</p>
+                <div className="flex justify-evenly">
+                    <Link href={`/`} className="flex items-center gap-2 hover:gap-4 transition-all duration-200">
+                        <WestIcon />
+                        <p>Home</p>
+                    </Link>
+                    <Link href={`/myOrders`} className="flex items-center gap-2 hover:gap-4 transition-all duration-200">
+                        <p>My Orders</p>
+                        <EastIcon />
+                    </Link>
                 </div>
             </div>
         </div>

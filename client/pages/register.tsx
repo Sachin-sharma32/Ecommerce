@@ -11,74 +11,73 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 import { setToken } from "../app/slices";
 import { State, User } from "../utils/types";
+import { useFormik } from 'formik'
+import * as yup from 'yup'
+import Success from "./success";
+import SuccessModel from "../utils/successModel";
+import ErrorModel from "../utils/errorModel";
+import Smooth from "../utils/smooth";
+import Head from "next/head";
 
 const Register = () => {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [passwordConfirm, setPasswordConfirm] = useState("");
-
     const { data: session } = useSession();
 
+    const [success, setSuccess] = useState(false);
+    const [isError, setIsError] = useState(false);
+
     const token = useSelector((state: State) => state.auth.accessToken);
-    if (token) {
-        router.push("/");
-    }
-
-    const nameChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setName(e.target.value);
-    };
-    const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
-    };
-    const passwordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value);
-    };
-    const passwordConfirmChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPasswordConfirm(e.target.value);
-    };
-
-    const { mutate: createCart } = useCreateCart();
 
     const onSuccess = (userData: any) => {
-        router.push("/signInUser");
-        createCart(userData);
+        setSuccess(true);
+        setTimeout(() => {
+            setSuccess(false)
+            router.push("/signIn");
+        }, 1000)
     };
 
     const onError = (error: any) => {
-        console.log(error)
+        setIsError(true);
+        setTimeout(() => {
+            setIsError(false)
+        }, 2000)
     };
 
     const {
         mutate: registerUser,
         data: userData,
         isLoading,
-        isError,
-        error,
+        error
     } = useRegister(onSuccess, onError);
 
-    const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const user = {
-            name,
-            email,
-            password,
-            passwordConfirm,
-        };
-        registerUser(user);
+    const submitHandler = async (values) => {
+        registerUser(values);
     };
 
     const dispatch = useDispatch();
 
     const onLogInSuccess = (data: any) => {
         dispatch(setToken(data.data.token));
-        router.push("/");
+        setSuccess(true)
+        setTimeout(() => {
+            setSuccess(false)
+            router.push("/");
+        }, 1000)
     };
-    const { mutate: login } = useLogin(onLogInSuccess);
+    const onLogInError = () => {
+        setIsError(true)
+        setTimeout(() => {
+            setIsError(false)
+            router.push("/");
+        }, 1000)
+    };
+    const { mutate: login, error: logInError } = useLogin(onLogInSuccess, onLogInError);
 
-    const signInGoogle = async (e: React.SyntheticEvent) => {
-        e.preventDefault();
-        await signIn("google").then(() => {
+    const signInGoogle = async () => {
+        signIn('google')
+    };
+
+    useEffect(() => {
+        if (session) {
             const user = {
                 name: session?.user.name,
                 email: session?.user.email,
@@ -86,124 +85,151 @@ const Register = () => {
                 oAuth: true,
             };
             login(user);
-        });
-    };
+        }
+    }, [session, login])
 
-    if (isLoading) {
-        <Spinner />;
-    } else {
-        return (
-            <div className=" min-h-screen flex justify-center items-center">
-                <div className=" w-fit p-10 text-center shadow-lg mt-24 mb-20">
-                    <div className=" text-center m-auto w-fit">
+    const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+
+    const validationObject = yup.object({
+        name: yup.string().min(3, "name should be atleast 3 characters long").required(" name field cannot be empty"),
+        email: yup.string().email("please provide a valid email").required(),
+        password: yup.string().matches(PASSWORD_REGEX, "please provider a strong password").required(),
+        passwordConfirm: yup.string().required().when('password', {
+            is: val => (val && val.length > 0 ? true : false),
+            then: yup.string().oneOf([yup.ref('password')], "passwords does not match")
+        })
+    })
+
+    const formik = useFormik({
+        //* these names will match the "name" of input field
+        initialValues: { name: "", email: "", password: "", passwordConfirm: "" },
+        validateOnBlur: true,
+        onSubmit: submitHandler,
+        validationSchema: validationObject
+    })
+
+    return (
+        <Smooth className=" min-h-screen flex justify-center items-center bg-gradient-to-r from-gray-100 to-gray-200 text-gray-500 text-xs">
+            <Head>
+                <title>Myntra - register</title>
+                <link rel="icon" type="image/png" href="https://images.indianexpress.com/2021/01/myntra.png" />
+                <meta
+                    name="description"
+                    content="The only online store you will need to fulfill all your needs"
+                />
+            </Head>
+            {success &&
+                <SuccessModel>Registered Successfully</SuccessModel>
+            }
+            {isError && (
+                <ErrorModel>{error?.response.data.message}</ErrorModel>
+            )}
+            {isError && (
+                <ErrorModel>{logInError.response.data.message}</ErrorModel>
+            )}
+            <div className="mt-[4rem] grid grid-cols-1 lg:grid-cols-2 form__background justify-items-center  h-fit shadow-2xl min-w-[70vw] max-w-[90%]">
+                <div className=" w-fit p-10 text-center flex flex-col gap-4">
+                    <div className=" text-center m-auto w-fit flex flex-col items-center">
                         <img
                             src="/myntra.png"
                             width={100}
                             height={100}
                             alt="img"
                         />
+                        <h2 className=" text-2xl font-semibold text-gray-800">
+                            Welcome to Myntra
+                        </h2>
                     </div>
-                    <h2 className=" text-2xl font-semibold">
-                        Welcome to Myntra
-                    </h2>
                     <form
-                        className=" mt-6 flex flex-col items-center"
-                        onSubmit={submitHandler}
+                        className=" items-center"
+                        onSubmit={formik.handleSubmit}
                     >
-                        {isError && (
-                            <Error error={error.response.data.message} />
-                        )}
-                        <div className=" flex flex-col items-start ">
-                            <label htmlFor="name" className=" text-md">
-                                Name
-                            </label>
-                            <input
-                                type="text"
-                                name="name"
-                                className=" p-3 w-60 outline-none bg-white border-2 border-blue-400 rounded-lg"
-                                onChange={nameChangeHandler}
-                                required
-                            />
-                        </div>
-                        <div className=" flex flex-col items-start ">
-                            <label htmlFor="email" className=" text-md">
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                name="email"
-                                className=" p-3 w-60 outline-none bg-white border-2 border-blue-400 rounded-lg"
-                                onChange={emailChangeHandler}
-                                required
-                            />
-                        </div>
-                        <div className=" flex flex-col items-start ">
-                            <label htmlFor="password" className=" text-md">
-                                Password
-                            </label>
-                            <input
-                                type="password"
-                                name="password"
-                                className=" p-3 w-60 outline-none bg-white border-2 border-blue-400 rounded-lg"
-                                onChange={passwordChangeHandler}
-                                required
-                            />
-                        </div>
-                        <div className=" flex flex-col items-start ">
-                            <label htmlFor="password" className=" text-md">
-                                Password Confirm
-                            </label>
-                            <input
-                                type="password"
-                                name="passwordConfirm"
-                                className=" p-3 w-60 outline-none bg-white border-2 border-blue-400 rounded-lg"
-                                onChange={passwordConfirmChangeHandler}
-                                required
-                            />
+                        <div className=" grid grid-cols-1 xl:grid-cols-2 gap-6 gap-y-2">
+
+                            <div className=" flex flex-col items-start ">
+                                <label htmlFor="name" className=" text-md">
+                                    Name
+                                </label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    className=" p-2 w-60 outline-none bg-white  rounded-sm focus:shadow-lg"
+                                    onChange={formik.handleChange}
+                                    value={formik.values.name}
+                                    /* //* to handle validateOnBlur */
+                                    onBlur={formik.handleBlur}
+                                    required
+                                />
+                                <Error>{formik.errors.name && formik.touched.name ? formik.errors.name : ""}</Error>
+                            </div>
+                            <div className=" flex flex-col items-start ">
+                                <label htmlFor="email" className=" text-md">
+                                    Email
+                                </label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    className=" p-2 w-60 outline-none bg-white  rounded-sm focus:shadow-lg"
+                                    onChange={formik.handleChange}
+                                    value={formik.values.email}
+                                    onBlur={formik.handleBlur}
+                                    required
+                                />
+                                <Error>{formik.errors.email && formik.touched.email ? formik.errors.email : ""}</Error>
+
+                            </div>
+                            <div className=" flex flex-col items-start ">
+                                <label htmlFor="password" className=" text-md">
+                                    Password
+                                </label>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    className=" p-2 w-60 outline-none bg-white  rounded-sm focus:shadow-lg"
+                                    onChange={formik.handleChange}
+                                    value={formik.values.password}
+                                    onBlur={formik.handleBlur}
+                                    required
+                                />
+                                <Error>{formik.errors.password && formik.touched.password ? formik.errors.password : ""}</Error>
+
+                            </div>
+                            <div className=" flex flex-col items-start ">
+                                <label htmlFor="password" className=" text-md">
+                                    Password Confirm
+                                </label>
+                                <input
+                                    type="password"
+                                    name="passwordConfirm"
+                                    className=" p-2 w-60 outline-none bg-white  rounded-sm focus:shadow-lg"
+                                    onChange={formik.handleChange}
+                                    value={formik.values.passwordConfirm}
+                                    onBlur={formik.handleBlur}
+                                    required
+                                />
+                                <Error>{formik.errors.passwordConfirm && formik.touched.passwordConfirm ? formik.errors.passwordConfirm : ""}</Error>
+                            </div>
                         </div>
                         <button
-                            className=" bg-blue-400 px-10 py-2 rounded-lg hover:bg-blue-200 transition-all duration-200 mt-4 w-60"
+                            className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-sm hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200 mt-4 w-60"
                             type="submit"
+                            disabled={!formik.isValid}
                         >
                             Sign Up
                         </button>
                     </form>
-                    <h5 className=" mt-6">OR</h5>
                     <div className="flex flex-col w-full justify-center items-center gap-2">
                         <button
                             onClick={signInGoogle}
-                            className=" bg-blue-400 px-10 py-2 w-fit rounded-lg hover:bg-blue-200 transition-all duration-200"
+                            className=" active:translate-y-5 border border-black text-black px-4 py-2 rounded-sm transition-all duration-200 w-60 flex gap-4 justify-center items-center"
                         >
-                            <GoogleIcon className=" mr-2" /> Continue with
-                            Google
+                            <img src="/google.png" className=" w-6" /> <p>Continue with google</p>
                         </button>
                     </div>
-                    <div className=" text-sm">
-                        <div className=" mt-10 text-gray-500">
-                            By continuing you agree to Myntra's <br />{" "}
-                            <span className=" text-black font-semibold">
-                                Terms of Service
-                            </span>{" "}
-                            and asknowledge you've read our{" "}
-                            <span className=" text-black font-semibold">
-                                Privacy Policy
-                            </span>
-                        </div>
-                        <div className=" mt-2 flex justify-center gap-2 items-center">
-                            Already on Myntra?{" "}
-                            <Link href="/signIn" className=" text-blue-500">
-                                Sign in
-                            </Link>
-                        </div>
-                        <p className=" text-gray-500">
-                            Are you a business? Get started here!
-                        </p>
-                    </div>
-                    <CloseIcon className=" absolute top-4 right-4 cursor-pointer" />
                 </div>
+                <div className=" "></div>
             </div>
-        );
-    }
-};
-
+        </Smooth>
+    );
+}
 export default Register;

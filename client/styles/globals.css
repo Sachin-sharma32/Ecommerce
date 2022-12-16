@@ -6,8 +6,10 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: "Lato", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.7;
 }
 
 a {
@@ -35,4 +37,135 @@ a {
 
 .btn{
   color: white;
+}
+
+
+.form__background{
+  background-image: linear-gradient(105deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.9) 50%, transparent 50%),url(../public/form-bg.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.checkout__background{
+  background-image: linear-gradient(105deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0.7) 100%),url(../public/form-bg.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+@media only screen and (max-width: 1024px) {
+  .form__background{
+    background-image: linear-gradient(90deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,1) 100%),url(../public/form-bg.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+.user-links{
+  visibility: hidden;
+}
+.user-icon:hover .user-links{
+  visibility: visible;
+}
+.scrollbar::-webkit-scrollbar{
+  width: 0;
+}
+.swiper-pagination-bullet{
+  width: 15px !important;
+  height: 3px !important;
+  border-radius: 5px !important;
+  margin-top: 10px !important;
+}
+.swiper-pagination-bullet-active {
+  background-color: #000 !important;
+}
+.swiper-button-next {
+  background-image: url('../public/right.png');
+  background-repeat: no-repeat;
+  background-size: 50% auto;
+  background-position: center;
+  background-color: white;
+  padding: 20px !important;
+  opacity: 80%;
+  position: absolute !important; 
+  transform: translateY(-50px);
+}
+.swiper-button-next:hover{
+  transition: all .5s;
+  border-radius: 100%;
+}
+.swiper-button-next::after{
+  display: none;
+}
+.swiper-button-next::after {
+  display: none;
+}
+.swiper-button-prev {
+  background-image: url('../public/left.png');
+  background-repeat: no-repeat;
+  background-size: 50% auto;
+  background-position: center;
+  background-color: white;
+  padding: 20px !important;
+  opacity: 80%;
+  transform: translateY(-50px);
+}
+.swiper-button-prev:hover{
+  transition: all .5s;
+  border-radius: 100%;
+}
+.swiper-button-prev::after{
+  display: none;
+}
+.swiper-button-prev::after {
+  display: none;
+}
+.grid__container{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  justify-items: center;
+  -moz-column-gap: 100px;
+       column-gap: 100px;
+}
+.grid-area-container{
+  display: grid;
+  grid-template-areas: "images details"
+                       "relatedProducts details"
+}
+@media only screen and (max-width: 600px) {
+  .grid-area-container{
+    display: grid;
+    grid-template-areas: "images images"
+                         "details details"
+                         "relatedProducts relatedProducts"
+  }
+}
+.images{
+  grid-area: images;
+}
+.details{
+  grid-area: details;
+}
+.relatedProducts{
+  grid-area: relatedProducts;
+}
+.orderDetails{
+  visibility: hidden;
+}
+.orderProduct:hover .orderDetails{
+  visibility: visible;
+}
+.text_field{
+  color: green;
+  border: 2px solid black !important;
+  outline: none;
+}
+.test__container:hover .test__text{
+ transform: translateY(0);
+}
+
+.conatiner{
+  background-image: url(../public/form-bg.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: cemter;
 }

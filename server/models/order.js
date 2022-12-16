@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
-const Product = require("./product");
 
 const orderSchema = new mongoose.Schema(
     {
-        user: {
+        userId: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             ref: "User",
@@ -15,6 +14,9 @@ const orderSchema = new mongoose.Schema(
                     required: true,
                     ref: "Product",
                 },
+                color: String,
+                quantity: Number,
+                size: String,
             },
         ],
         amount: {
@@ -27,7 +29,17 @@ const orderSchema = new mongoose.Schema(
         },
         status: {
             type: String,
-            default: "pending",
+            default: "order placed",
+            enum: {
+                values: [
+                    "order placed",
+                    "out for delivery",
+                    "delivered",
+                    "cancled",
+                ],
+                message:
+                    "status values: pending, order placed, out for delivery, delivered or cancled",
+            },
         },
     },
     { timestamps: true }
@@ -39,8 +51,8 @@ orderSchema.pre(/^find/, function (next) {
 });
 
 orderSchema.pre(/^find/, function (next) {
-    this.populate({ path: "user" });
-    next()
+    this.populate({ path: "userId" });
+    next();
 });
 
 const Order = mongoose.model("Order", orderSchema);

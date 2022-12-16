@@ -20,7 +20,7 @@ export const useRegister = (onSuccess, onError) => {
     );
 };
 
-export const useLogin = (onSuccess: (data: any) => void) => {
+export const useLogin = (onSuccess: (data: any) => void, onError) => {
     return useMutation(
         (user: LogIn) => {
             return axios.post("http://localhost:8000/api/v1/auth/login", user, {
@@ -30,6 +30,7 @@ export const useLogin = (onSuccess: (data: any) => void) => {
         },
         {
             onSuccess: onSuccess,
+            onError: onError
         }
     );
 };
@@ -43,8 +44,8 @@ export const useRefresh = (onSuccess) => {
             });
         },
         {
-            refetchOnMount: true,
-            refetchOnWindowFocus: true,
+            refetchInterval: 1000 * 20,
+            refetchIntervalInBackground: true,
             onSuccess: onSuccess,
             select: (data) => {
                 const accessToken = data?.data.token;
@@ -67,6 +68,8 @@ export const useGetMe = (onSuccess?: (user: User) => void) => {
             });
         },
         {
+            refetchOnMount: true,
+            refetchOnWindowFocus: true,
             enabled: !!token,
             select: (data) => {
                 const user = data.data.data.user;
@@ -75,15 +78,6 @@ export const useGetMe = (onSuccess?: (user: User) => void) => {
             onSuccess: onSuccess,
         }
     );
-};
-
-export const useCreateCart = () => {
-    return useMutation("createCart", (userData) => {
-        return axios.post("http://localhost:8000/api/v1/carts", {
-            userId: userData.data.data.newUser._id,
-            products: [],
-        });
-    });
 };
 
 export const useLogout = () => {
@@ -101,13 +95,12 @@ export const useLogout = () => {
         {
             onSuccess: () => {
                 dispatch(setUser(null));
-
             },
         }
     );
 };
 
-export const useUpdateUser = (userId: string) => {
+export const useUpdateUser = (userId: string, onSuccess?: () => void, onError?: (error?: any) => void) => {
     const token = useSelector((state: State) => state.auth.accessToken);
     const queryClient = useQueryClient();
     return useMutation(
@@ -127,7 +120,9 @@ export const useUpdateUser = (userId: string) => {
             enabled: !!userId,
             onSuccess: () => {
                 queryClient.invalidateQueries("me");
+                onSuccess()
             },
+            onError: onError
         }
     );
 };

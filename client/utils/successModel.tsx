@@ -1,10 +1,11 @@
 import React from "react";
+import { motion } from 'framer-motion'
 
-const SuccessModel = ({ text }) => {
+const SuccessModel = (props) => {
     return (
-        <div className=" fixed top-[4rem] mx-auto bg-green-500 p-10 rounded-lg text-white z-50">
-            {text}
-        </div>
+        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className=" fixed top-0 left-1/2 -translate-x-1/2 bg-green-500 p-4 rounded-sm text-white z-50">
+            {props.children}
+        </motion.div>
     );
 };
 

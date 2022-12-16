@@ -15,21 +15,29 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-
         //? file upload (f)
-        img: {
-            type: String,
-        },
-
+        img: [{ type: String }],
         category: {
-            type: Array,
+            type: String,
             required: true,
         },
-        size: { type: Array },
+        collectionName: {
+            type: String,
+            required: true,
+        },
+        size: [{ type: String }],
+        coverImg: { type: String },
+        featured: Boolean,
         color: Array,
         price: {
             type: Number,
             required: true,
+        },
+        discountPrice: {
+            type: Number,
+        },
+        offer: {
+            type: String,
         },
         inStock: {
             type: Boolean,
@@ -43,7 +51,7 @@ productSchema.pre(/^find/, function (next) {
     this.populate("user").populate({
         path: "user",
     });
-    next()
+    next();
 });
 
 const Product = mongoose.model("Product", productSchema);

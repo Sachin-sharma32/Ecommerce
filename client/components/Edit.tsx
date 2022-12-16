@@ -1,181 +1,357 @@
+//? formik
+//! nested objects (20)
+
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
-import CloseIcon from "@mui/icons-material/Close";
-import { useUpdateProduct } from "../hooks/useProduct";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
+import { useCreateProduct, useUpdateProduct } from "../hooks/useProduct";
+import { Formik, FieldArray, Field, Form, ErrorMessage } from "formik";
+import * as yup from 'yup'
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import Error from "../utils/error";
+import SuccessModel from "../utils/successModel";
+import ErrorModel from "../utils/errorModel";
+import { State } from "../utils/types";
+import CloseIcon from '@mui/icons-material/Close';
+import Checkbox from '@mui/material/Checkbox';
 
-const Edit = ({ product, setSelectedProduct }) => {
-    const [image, setImage] = useState(null);
+const UpdateAccount = ({ product, setEditing, setSelectedProduct }) => {
 
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState(0);
-    const [categories, setCategories] = useState(null);
-    const [sizes, setSizes] = useState(null);
-    const [colors, setColors] = useState(null);
+  const [images, setImages] = useState([])
 
-    useEffect(() => {
-        setTitle(product.title);
-        setDescription(product.desc);
-        setPrice(product.price);
-        setCategories(product.category);
-        setSizes(product.size);
-        setColors(product.color);
-        setImage(product.img);
-    }, [product]);
+  const [coverImg, setCoverImg] = useState(null)
 
-    const categoryHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const catString = e.target.value;
-        const catArray = catString.split(",");
-        setCategories(catArray);
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState(false)
+
+  const [isChecked, setIsChecked] = useState(false)
+  useEffect(() => {
+    setIsChecked(product.featured)
+    setImages(product.img)
+    setCoverImg(product.coverImg)
+  }, [product])
+
+  const user = useSelector((state: State) => state.auth.user)
+
+  const categories = useSelector((state) => state.auth.categories)
+  const collections = useSelector((state) => state.auth.collections)
+
+  //? (f)
+  const imageHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e.target.files)
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/uploads",
+        formData,
+        config
+      );
+      setImages([...images, response.data])
+    } catch (err) {
+      (err)
+    }
+  };
+  const coverImgHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e.target.files)
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/uploads",
+        formData,
+        config
+      );
+      setCoverImg(response.data)
+    } catch (err) {
+      (err)
+    }
+  };
+
+  const onSuccess = () => {
+    setSuccess(true)
+    setTimeout(() => {
+      setSuccess(false)
+      setEditing(false)
+      setSelectedProduct(null)
+    }, 2000)
+  }
+
+
+  const onError = () => {
+    setError(true)
+    setTimeout(() => {
+      setError(false)
+    }, 2000)
+  }
+
+  const { mutate: updateProduct, error: err } = useUpdateProduct(product._id, onSuccess, onError);
+
+  const submitHandler = async (values) => {
+    const product = {
+      img: images,
+      coverImg: coverImg,
+      featured: isChecked,
+      user: user?._id,
+      collectionName: values.collection,
+      ...values
     };
-    const sizeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const sizeString = e.target.value;
-        const sizeArray = sizeString.split(",");
-        setSizes(sizeArray);
-    };
-    const colorHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const sizeString = e.target.value;
-        const sizeArray = sizeString.split(",");
-        setColors(sizeArray);
-    };
+    updateProduct(product);
+  };
+  const SIZES = (/xs|s|m|l|xl/)
+  const COLORS = /red|pink|black|gray|orange|yellow|green|indigo|purple|white|blue/
 
-    const imageHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files[0];
-        const formData = new FormData();
-        formData.append("image", file);
+  const validationObject = yup.object({
+    title: yup.string().min(3, "title should atleast 3 characters long").required("title is required"),
+    desc: yup.string().min(20, "description should be atleast 20 characters long").required("desc is required"),
+    price: yup.number().min(200, "price should be atleast Rs.200").required("price is required"),
+    discountPrice: yup.number().min(200, "price should be atleast Rs.200"),
+    offer: yup.string(),
+    featured: yup.boolean(),
+    category: yup.string().required('category is required'),
+    collection: yup.string().required('category is required'),
+    size: yup.array().of(yup.string().matches(SIZES, "provide valid size").required("size field is required")).min(2, "minimun 2 sizes are required"),
+    color: yup.array().of(yup.string().matches(COLORS, " provide valid color").required("size field is required")).min(1)
+  })
 
-        try {
-            const config = {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            };
+  const initialValues = {
+    title: product.title, desc: product.desc, price: product.price, category: product.category, collection: product.collectionName, size: product.size.map((item) => item), color: product.color.map((item) => item), discountPrice: product.discountPrice, offer: product.offer
+  }
 
-            const response = await axios.post(
-                "http://localhost:8000/api/v1/uploads",
-                formData,
-                config
-            );
-            setImage(response.data);
-            response.data;
-        } catch (err) {
-            err;
-        }
-    };
+  const removeImg = (index) => {
+    const filter = images.filter((img, i) => {
+      return i !== index
+    })
+    setImages(filter)
+  }
 
-    const { mutate: updateProduct } = useUpdateProduct(product._id);
-    const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+  const removeCoverImg = () => {
+    setCoverImg("")
+  }
 
-        const product = {
-            title,
-            desc: description,
-            img: image,
-            category: categories,
-            price,
-            size: sizes,
-            color: colors,
-        };
-        updateProduct(product);
-    };
+  return (
+    <div className="flex min-h-screen gap-10 text-xs w-full justify-evenly mb-20">
+      {success && <SuccessModel>product created successfully</SuccessModel>}
+      {error && <ErrorModel>{err.response.data.message}</ErrorModel>}
+      <div className=" flex flex-col gap-10 w-full items-center">
+        <h2 className=" text-xl font-semibold text-center">Create Product</h2>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={submitHandler}
 
+          //* by default
+          validateOnBlur={true}
+          validateOnChange={true}
 
-
-    return (
-        <div className="flex flex-col justify-center items-center pt-10 gap-10 shadow-2xl w-fit p-10 rounded-lg backdrop-blur-10 absolute top-0 z-4 backdrop-blur-3xl">
-            <button
-                onClick={() => {
-                    setSelectedProduct(null);
-                }}
-            >
-                <CloseIcon className=" absolute z-10 top-2 left-2" />
-            </button>
-            <h2 className=" text-4xl font-semibold">Update: {product._id}</h2>
-            <form
-                className=" flex flex-col w-fit justify-center items-center gap-4"
-                onSubmit={submitHandler}
-            >
-                <div className=" h-52 w-52 flex justify-center rounded-full overflow-hidden relative">
-                    {image ? (
-                        <img src={image} width={300} height={300} />
-                    ) : (
-                        <img
-                            src={product.img}
-                            width={300}
-                            height={200}
-                            className=""
-                        />
-                    )}
-                    <div className=" absolute bottom-0 bg-white p-2 rounded-full opacity-80">
-                        <EditIcon className=" text-black cursor-pointer" />
-                    </div>
-                    <input
-                        type="file"
-                        className=" absolute bottom-0 opacity-0 cursor-pointer"
-                        onChange={imageHandler}
-                    />
-                    <div className=" absolute bottom-0 opacity-0 cursor-pointer"></div>
-                </div>
-                <input
-                    type="text"
-                    className=" bg-white border-2 border-black w-96 h-16 rounded-lg px-4 py-2 outline-none"
-                    placeholder="Title"
-                    onChange={(e) => {
-                        setTitle(e.target.value);
-                    }}
-                    value={title}
-                />
-                <input
-                    type="text"
-                    className=" bg-white border-2 border-black w-96 h-16 rounded-lg px-4 py-2 outline-none"
-                    placeholder="Description"
-                    onChange={(e) => {
-                        setDescription(e.target.value);
-                    }}
-                    value={description}
-                />
-                <input
-                    type="number"
-                    className=" bg-white border-2 border-black w-96 h-16 rounded-lg px-4 py-2 outline-none"
-                    placeholder="Price"
-                    onChange={(e) => {
-                        setPrice(+(e.target.value));
-                    }}
-                    value={price}
-                />
-                <input
-                    type="text"
-                    className=" bg-white border-2 border-black w-96 h-16 rounded-lg px-4 py-2 outline-none"
-                    placeholder="Categories"
-                    onChange={categoryHandler}
-                    value={categories}
-                />
-                <input
-                    type="text"
-                    className=" bg-white border-2 border-black w-96 h-16 rounded-lg px-4 py-2 outline-none"
-                    placeholder="Sizes"
-                    onChange={sizeHandler}
-                    value={sizes}
-                />
-                <input
-                    type="text"
-                    className=" bg-white border-2 border-black w-96 h-16 rounded-lg px-4 py-2 outline-none"
-                    placeholder="Colors"
-                    onChange={colorHandler}
-                    value={colors}
-                />
-                <button
-                    className=" bg-blue-400 px-10 py-2 rounded-lg hover:bg-blue-200 transition-all duration-200 w-full"
-                    type="submit"
+          validationSchema={validationObject}>
+          {
+            (props) => {
+              return (
+                <Form
+                  className=" flex flex-col justify-center items-center gap-4 w-[300px]"
                 >
+                  <div className="w-full">
+                    <Field
+                      type="text"
+                      className="w-full border-b rounded-sm px-4 py-2 outline-none bg-inherit"
+                      placeholder="Title"
+                      name="title"
+                    />
+                    <ErrorMessage name="title" component={Error} />
+                  </div>
+                  <div className=" w-full">
+
+                    <Field
+                      type="text"
+                      className="w-full bg-white border-b  rounded-sm px-4 py-2 outline-none"
+
+                      placeholder="Description"
+                      name="desc"
+                    />
+                    <ErrorMessage name="desc" component={Error} />
+                  </div>
+                  <div className=" w-full">
+
+                    <Field
+                      type="number"
+                      className=" w-full bg-white border-b  rounded-sm px-4 py-2 outline-none"
+
+                      placeholder="price"
+                      name="price"
+                    />
+                    <ErrorMessage name="price" component={Error} />
+                  </div>
+                  <div className=" w-full">
+                    <Field
+                      type="number"
+                      className=" w-full bg-white border-b  rounded-sm px-4 py-2 outline-none"
+                      placeholder="Discount Price (optional)"
+                      name="discountPrice"
+                    />
+                    <ErrorMessage name="discountPrice" component={Error} />
+                  </div>
+                  <div className=" w-full">
+
+                    <Field
+                      type="text"
+                      className=" w-full bg-white border-b  rounded-sm px-4 py-2 outline-none"
+
+                      placeholder="Offer (optional)"
+                      name="offer"
+                    />
+                    <ErrorMessage name="offer" component={Error} />
+                  </div>
+                  <div className="flex gap-10 mb-10">
+                    <div className=" flex gap-4">
+                      <p className=" border-b border-green-500">Category</p>
+                      <select defaultValue={product.category} name="category" value={props.values.category} onChange={props.handleChange} onBlur={props.handleBlur} className=" bg-white">
+                        <option value="" disabled>select</option>
+                        {categories?.map((category, index) => (
+                          <>
+                            <option key={category._id} value={category.title}>{category.title}</option>
+                          </>
+                        ))}
+                      </select>
+                    </div>
+                    <div className=" flex gap-4">
+                      <p className=" border-b border-green-500">Collection</p>
+                      <select defaultValue={product.collection} name="collection" value={props.values.collection} onChange={props.handleChange} onBlur={props.handleBlur} className=" bg-white" disabled={!props.values.category}>
+                        <option value="" disabled>select</option>
+                        {collections?.filter(collection => collection.category === props.values.category).map((collection, index) => (
+                          <>
+                            <option key={collection._id} value={collection.title}>{collection.title}</option>
+                          </>
+                        ))}
+                      </select>
+
+                    </div>
+                  </div>
+                  <div className=" border rounded-sm p-4 relative w-full flex justify-center">
+                    <label className=" font-bold absolute -top-2 bg-white">Size</label>
+                    <FieldArray name="size">
+                      {(props) => {
+                        const { push, remove, form } = props;
+                        const { values } = form
+                        return (
+                          <div className="flex flex-col gap-1">
+                            {values.size.map((item, index) => (
+                              <div key={index}>
+                                <div key={index} className="flex gap-2">
+                                  <Field name={`size[${index}]`} className=" bg-inherit border-b  rounded-sm px-4 py-2 outline-none" />
+                                  {index > 0 && <button onClick={() => remove(index)} className=" rounded-full"><RemoveIcon className=" text-gray-400" /></button>}
+                                  <button onClick={() => push('')} className=" rounded-full"><AddIcon className=" text-gray-400" /></button>
+                                </div>
+                                <ErrorMessage name={`size[${index}]`} component={Error} />
+                              </div>
+                            ))}
+                          </div>
+                        )
+                      }}
+                    </FieldArray>
+                  </div>
+                  <div className=" border rounded-sm p-4 relative w-full flex justify-center">
+
+                    <label className=" font-bold absolute -top-2 bg-white">Colors</label>
+                    <FieldArray name="color">
+                      {(props) => {
+                        const { push, remove, form } = props;
+                        const { values } = form
+                        return (
+                          <div className="flex flex-col gap-1">
+                            {values.color.map((item, index) => (
+                              <div key={index}>
+                                <div key={index} className="flex gap-2">
+                                  <Field name={`color[${index}]`} className=" bg-inherit border-b  rounded-sm px-4 py-2 outline-none" />
+                                  {index > 0 && <button onClick={() => remove(index)} className=" rounded-full"><RemoveIcon className=" text-gray-400" /></button>}
+                                  <button onClick={() => push('')} className=" rounded-full"><AddIcon className=" text-gray-400" /></button>
+                                </div>
+                                <ErrorMessage name={`color[${index}]`} component={Error} />
+                              </div>
+                            ))}
+                          </div>
+                        )
+                      }}
+                    </FieldArray>
+                  </div>
+                  <div className="flex items-center w-full justify-end">
+                    <p>Featured</p>
+                    <Checkbox size="small" onChange={() => setIsChecked(current => !current)} defaultChecked={product.featured} />
+                  </div>
+                  <button
+                    className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-sm hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200"
+                    type="submit"
+                    disabled={!props.isValid}
+                  >
                     UPDATE
+                  </button>
+                </Form>
+              )
+            }
+          }
+        </Formik>
+      </div>
+      <div className={`flex justify-evenly w-full overflow-hidden relative items-start  ${!images ? "items-center" : ""} mt-10 h-fit w-fit`}>
+        <div className=" bg-white p-2 opacity-80 flex items-start gap-4  w-full flex-col">
+          <div className="flex items-center gap-4 w-fit border-b border-green-500 p-2">
+            <p>Upload images</p>
+            <EditIcon className="cursor-pointer" />
+            <div className=" absolute opacity-0 cursor-pointer">
+              <input type="file" onChange={imageHandler} />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-1">
+            {images && images.map((image, index) => (
+              <div className=" relative w-full" key={image}>
+                <img src={image} className='border-none w-[100px] h-[100px]' />
+                <button onClick={() => { removeImg(index) }}>
+                  <CloseIcon className=" absolute top-0 right-0 cursor-pointer text-sm" />
                 </button>
-            </form>
+              </div>
+            ))}
+          </div>
         </div>
-    );
+        <div className="p-2 opacity-80 flex items-start gap-4  w-full flex-col justify-center">
+          <div className="flex items-center gap-4 w-fit border-b border-green-500 p-2">
+            <p>Upload Cover</p>
+            <EditIcon className="cursor-pointer" />
+            <div className=" absolute opacity-0 cursor-pointer">
+              <input type="file" onChange={coverImgHandler} />
+            </div>
+          </div>
+          <div className="grid grid-cols-2">
+            {coverImg &&
+              <div className=" relative w-full">
+                <img key={coverImg} src={coverImg} className='border-none w-[100px] h-[100px]' />
+                <button onClick={removeCoverImg}>
+                  <CloseIcon className=" absolute top-0 right-0 cursor-pointer text-sm" />
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div >
+  );
 };
 
-export default Edit;
+export default UpdateAccount;

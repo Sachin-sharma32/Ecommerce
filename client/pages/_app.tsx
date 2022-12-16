@@ -3,35 +3,27 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import store from "../app/store";
 import { Provider } from "react-redux";
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import Head from "next/head";
 import { SessionProvider } from "next-auth/react";
 import { AppProps } from "next/app";
+import Script from "next/script";
 
 function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
     const queryClient = new QueryClient();
-    if (router.pathname === "/dashboard") {
+    if (router.pathname === "/dashboard" || router.pathname === '/register' || router.pathname === '/signIn' || router.pathname === '/forgotPassword' || router.pathname.startsWith('/resetPasswrod')) {
         return (
             <SessionProvider>
                 <QueryClientProvider client={queryClient}>
                     <Provider store={store}>
-                        <>
-                            <Head>
-                                <title>Myntra - shop your dreams</title>
-                                <meta
-                                    name="description"
-                                    content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-                                />
-                            </Head>
-                        </>
-                        <>
+                        <div className=" text-gray-600 tracking-wide overflow-hidden">
                             <Navbar />
-                            <Component {...pageProps} />
-                        </>
+                            <Component {...pageProps}/>
+                        </div>
                     </Provider>
                     <ReactQueryDevtools />
                 </QueryClientProvider>
@@ -42,20 +34,11 @@ function MyApp({ Component, pageProps }: AppProps) {
             <SessionProvider>
                 <QueryClientProvider client={queryClient}>
                     <Provider store={store}>
-                        <>
-                            <Head>
-                                <title>Myntra - shop your dreams</title>
-                                <meta
-                                    name="description"
-                                    content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-                                />
-                            </Head>
-                        </>
-                        <>
+                        <div className=" text-gray-600 tracking-wide overflow-hidden">
                             <Navbar />
                             <Component {...pageProps} />
                             <Footer />
-                        </>
+                        </div>
                     </Provider>
                     <ReactQueryDevtools />
                 </QueryClientProvider>

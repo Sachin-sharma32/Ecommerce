@@ -32,6 +32,10 @@ export interface User extends CreateUser{
 }
 
 export interface Product{
+  coverImg: string
+  discountPrice: any
+  offer: JSX.Element
+  collectionName: any
   category: string[],
   color: string[],
   createdAt?: Date,
@@ -73,6 +77,7 @@ export interface Cart{
 }
 
 export interface AuthState{
+    wishList: any
     cart: null |  Cart,
     user: null | User,
     products: null | Products[],

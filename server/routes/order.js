@@ -1,11 +1,16 @@
 const express = require("express");
-const { verifyAdmin, verifyUser } = require("../controllers/authController");
+const {
+    verifyAdmin,
+    verifyUser,
+    verifyToken,
+} = require("../controllers/authController");
 const {
     updateOrder,
     deleteOrder,
     getOrder,
     createOrder,
     getAllOrders,
+    orderStats,
 } = require("../controllers/orderController");
 
 const router = express.Router();
@@ -14,7 +19,7 @@ router
     .route("/:id")
     .patch(verifyUser, updateOrder)
     .delete(verifyUser, deleteOrder);
-router.route("/get/:userId").get(verifyUser, getOrder);
-router.route("/").post(createOrder).get(verifyAdmin, getAllOrders);
+router.route("/get/:userId").get(verifyToken, getOrder);
+router.route("/").post(verifyToken, createOrder).get(getAllOrders);
 
 module.exports = router;

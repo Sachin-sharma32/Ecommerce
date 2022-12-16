@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "pages/cart.tsx", "pages/404.tsx", "pages/_app.tsx", "app/store.tsx", "app/slices.tsx" , "app/orderSlice.tsx", "utils/ErrorBoundry.js" ],
+, "pages/cart.tsx", "pages/404.tsx", "pages/_app.tsx", "app/store.tsx", "app/slices.tsx" , "app/orderSlice.tsx", "utils/ErrorBoundry.js", "hooks/useAuth.js", "components/Header.js" ],
   "exclude": [
     "node_modules"
   ]

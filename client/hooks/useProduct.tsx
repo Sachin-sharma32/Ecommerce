@@ -3,7 +3,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { Product, State } from "../utils/types";
 
-export const useGetProducts = () => {
+export const useGetProducts = (onSuccess) => {
     const token = useSelector((state: State) => state.auth.accessToken);
     return useQuery(
         "products",
@@ -20,13 +20,13 @@ export const useGetProducts = () => {
                 return products;
             },
             enabled: !!token,
+            onSuccess: onSuccess
         }
     );
 };
 
-export const useGetProduct = (productId: string) => {
+export const useGetProduct = (productId: string, onSuccess) => {
     const token = useSelector((state: State) => state.auth.accessToken);
-
     return useQuery(
         "product",
         () => {
@@ -45,11 +45,12 @@ export const useGetProduct = (productId: string) => {
                 return product;
             },
             enabled: !!token,
+            onSuccess: onSuccess,
         }
     );
 };
 
-export const useCreateProduct = () => {
+export const useCreateProduct = (onSuccess: () => void, onError) => {
     const queryClient = useQueryClient();
     const token = useSelector((state: State) => state.auth.accessToken);
     return useMutation(
@@ -68,12 +69,14 @@ export const useCreateProduct = () => {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries("products");
+                onSuccess()
             },
+            onError: onError
         }
     );
 };
 
-export const useUpdateProduct = (productId: string) => {
+export const useUpdateProduct = (productId: string, onSuccess, onError) => {
     const queryClient = useQueryClient();
     const token = useSelector((state: State) => state.auth.accessToken);
     return useMutation(
@@ -92,12 +95,14 @@ export const useUpdateProduct = (productId: string) => {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries("products");
+                onSuccess()
             },
+            onError: onError
         }
     );
 };
 
-export const useDeleteProduct = () => {
+export const useDeleteProduct = (onSuccess) => {
     const queryClient = useQueryClient();
     const token = useSelector((state: State) => state.auth.accessToken);
     return useMutation(
@@ -119,6 +124,7 @@ export const useDeleteProduct = () => {
             },
             onSuccess: () => {
                 queryClient.invalidateQueries("products");
+                onSuccess()
             },
         }
     );

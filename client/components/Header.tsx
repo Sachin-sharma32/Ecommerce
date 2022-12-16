@@ -1,68 +1,89 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import HeaderCard from "./HeaderCard";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useState } from "react";
 import ErrorBoundry from "../utils/ErrorBoundry";
+import { sliderClasses } from "@mui/material";
+import { useSelector } from "react-redux";
+import CategoryCard from "./CollectionCard";
+import CollectionCard from "./CollectionCard";
+import { motion } from 'framer-motion'
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation, Autoplay, EffectCoverflow, Keyboard } from "swiper";
+import "swiper/css";
+import "swiper/swiper.min.css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import "swiper/css/effect-coverflow";
+import Smooth from "../utils/smooth";
+
 
 const Header = () => {
-    const [card, setCard] = useState(0);
-    const increment = () => {
-        if (card < 4) {
-            setCard((current) => current + 1);
+    const selectedCategory = useSelector((state) => state.auth.selectedCategory)
+    let collections = useSelector((state) => state.auth.collections);
+    const [filterCollection, setFilterCollection] = useState([])
+    useEffect(() => {
+        if (selectedCategory) {
+            setFilterCollection(collections.filter((collection) => {
+                return collection.category == selectedCategory.title
+            }))
         } else {
-            setCard(0);
+            setFilterCollection(collections)
         }
-    };
-    const decrement = () => {
-        if (card > 0) {
-            setCard((current) => current - 1);
-        } else {
-            setCard(4);
-        }
-    };
-    const cards = [
-        {
-            title: "WOMEN'S TRANDING",
-            desc: "Collection of the latest and the most stylish women's wear.",
-            img: "/img-1.png",
-            bg: "bg-blue-100",
-        },
-        {
-            title: "SUMMER COLLECTION",
-            desc: "Collection of the latest and the most stylish summer women's wear.",
-            img: "/img-2.png",
-            bg: "bg-pink-100",
-        },
-        {
-            title: "CLASSY FASHION",
-            desc: "Collection of the latest and the most classic women's wear.",
-            img: "/img-3.png",
-            bg: "bg-yellow-100",
-        },
-        {
-            title: "AUTOMN COLLECTION",
-            desc: "Collection of the latest and the most stylish authmn collection for woman.",
-            img: "/img-4.png",
-            bg: "bg-red-100",
-        },
-        {
-            title: "MEN'S COLLECTION ",
-            desc: "Collection of the latest and the most stylish men's wear.",
-            img: "/img-5.png",
-            bg: "bg-purple-100",
-        },
-    ];
+    }, [filterCollection, collections, selectedCategory])
     return (
-        <div className=" mt-[4rem] flex w-[100%] h-[93vh] relative">
-            <HeaderCard card={cards[card]} />
-            <button onClick={decrement}>
-                <ChevronLeftIcon className=" absolute top-1/2 left-[1rem] hover:scale-125 transition-all duration-200 -translate-y-1/2 bg-white w-10 h-10 rounded-full" />
-            </button>
-            <button onClick={increment}>
-                <ChevronRightIcon className=" absolute top-1/2 right-[1rem] hover:scale-125 transition-all duration-200 -translate-y-1/2 bg-white w-10 h-10 rounded-full" />
-            </button>
-        </div>
+        <Smooth className="mt-[7rem] min-h-[60vh] max-h-[100vh]">
+            <Swiper
+                effect={"coverflow"}
+                breakpoints={{
+                    0: {
+                        slidesPerView: 1,
+                        spaceBetween: 10
+                    },
+                    600: {
+                        slidesPerView: 2,
+                        spaceBetween: 0,
+                    },
+                    900: {
+                        slidesPerView: 3,
+                        spaceBetween: 50,
+
+                    }
+                }}
+                coverflowEffect={{
+                    rotate: 50,
+                    stretch: 0,
+                    depth: 150,
+                    modifier: 1,
+                    slideShadows: false,
+                }}
+                style={{
+                    "--swiper-pagination-color": "#fff",
+                }}
+                spaceBetween={30}
+                navigation={true}
+                grabCursor={true}
+                loop={true}
+                pagination={{
+                    clickable: true,
+                }}
+                keyboard={{
+                    enabled: true,
+                }}
+                modules={[Pagination, Navigation, Autoplay, EffectCoverflow, Keyboard]}
+                className="mySwiper"
+                autoplay={{
+                    delay: 3000,
+                    disableOnInteraction: false,
+                }}
+            >
+                {filterCollection?.map((collection) => (
+                    <SwiperSlide key={collection._id} className=" h-[20%] mb-10" > <HeaderCard card={collection} /></SwiperSlide>
+                ))}
+
+            </Swiper>
+        </Smooth >
     );
 };
 

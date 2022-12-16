@@ -7,6 +7,12 @@ const initialState = {
     products: null,
     total: null,
     accessToken: null,
+    categories: null,
+    collections: null,
+    selectedCategory: null,
+    wishList: null,
+    ratings: null,
+    orders: null
 };
 
 const authSlice = createSlice({
@@ -25,12 +31,31 @@ const authSlice = createSlice({
         setTotal: (state) => {
             state.total =
                 state.cart?.products.reduce((acc: number, item: ProductWithQuantity) => {
-                    return acc + item.quantity * item.product.price
-                }, 0) + 50;
+                    return acc + (item.quantity * (item.product.discountPrice ? item.product.discountPrice : item.product.price))
+                }, 0);
         },
         setToken: (state, action) => {
             state.accessToken = action.payload;
         },
+        setCategories: (state, action) => {
+            state.categories = action.payload
+        },
+        setCollections: (state, action) => {
+            state.collections = action.payload
+        },
+        setSelectedCategory: (state, action) => {
+            state.selectedCategory = action.payload
+        },
+        setWishList: (state, action) => {
+            state.wishList = action.payload
+        },
+        setRatings: (state, action) => {
+            state.ratings = action.payload
+        },
+        setOrders: (state, action) => {
+            state.orders = action.payload
+            console.log(state.orders)
+        }
     },
 });
 
@@ -40,5 +65,11 @@ export const {
     setCart,
     setTotal,
     setToken,
+    setCategories,
+    setCollections,
+    setSelectedCategory,
+    setWishList,
+    setRatings,
+    setOrders
 } = authSlice.actions;
 export default authSlice.reducer;

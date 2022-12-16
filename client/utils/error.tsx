@@ -1,7 +1,7 @@
-const Error = ({ error }) => {
+const Error = (props) => {
     return (
-        <p className=" font-semibold text-red-500 w-60 p-4 rounded-lg bg-gray-200">
-            {error}
+        <p className='text-red-500 text-xs mt-1 mx-auto w-fit h-6'>
+            {props.children}
         </p>
     );
 };
