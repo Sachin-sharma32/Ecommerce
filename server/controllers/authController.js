@@ -20,7 +20,6 @@ exports.createUser = catchAsync(async (req, res) => {
 });
 
 exports.logIn = catchAsync(async (req, res, next) => {
-    console.log(req.body);
     if (!req.body.oAuth) {
         const user = await User.findOne({
             email: req.body.email,
@@ -45,6 +44,7 @@ exports.logIn = catchAsync(async (req, res, next) => {
             });
         }
     } else if (req.body.oAuth) {
+        req.body;
         let user = await User.findOne({
             email: req.body.email,
         });
@@ -175,7 +175,7 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
     const { resetToken } = req.params;
-    console.log(resetToken, req.body);
+    resetToken, req.body;
     const user = await User.findOne({
         passwordResetToken: resetToken,
         passwordResetExpiry: { $gt: new Date(Date.now()) },

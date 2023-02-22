@@ -17,12 +17,12 @@ const router = express.Router();
 
 router
     .route("/:id")
-    .patch(verifyAdmin, updateProduct)
-    .delete(verifyAdmin, deleteProduct)
-    .get(verifyToken, getProduct);
+    .patch(updateProduct)
+    .delete(deleteProduct)
+    .get(getProduct);
 router
     .route("/")
-    .get(verifyToken, getAllProducts)
+    .get(getAllProducts)
     .post(verifyAdmin, createProduct);
 
 module.exports = router;

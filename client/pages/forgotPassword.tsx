@@ -17,14 +17,12 @@ import Head from "next/head";
 import EastIcon from '@mui/icons-material/East';
 import axios from "axios";
 
-
 const SignInUser = () => {
   const dispatch = useDispatch();
 
   const [success, setSuccess] = useState(false)
 
   const { data: session } = useSession();
-
 
   const submitHandler = async (values) => {
     const response = await axios.post('http://localhost:8000/api/v1/auth/forgotPassword', values)

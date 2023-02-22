@@ -20,6 +20,6 @@ router
     .patch(verifyUser, updateOrder)
     .delete(verifyUser, deleteOrder);
 router.route("/get/:userId").get(verifyToken, getOrder);
-router.route("/").post(verifyToken, createOrder).get(getAllOrders);
+router.route("/").post(verifyToken, createOrder).get(verifyToken, getAllOrders);
 
 module.exports = router;

@@ -10,7 +10,7 @@ import { State } from "../utils/types";
 import Smooth from "../utils/smooth";
 import Head from "next/head";
 import { Formik, Form, Field } from "formik";
-import * as yup from 'yup'
+import * as yup from "yup";
 import Error from "../utils/error";
 import { TextField } from "@mui/material";
 import SuccessModel from "../utils/successModel";
@@ -19,36 +19,39 @@ const SignIn = () => {
     const dispatch = useDispatch();
 
     const user = useSelector((state: State) => state.auth.user);
-    const cart = useSelector((state: State) => state.auth.cart)
-    console.log(cart)
-    const [success, setSuccess] = useState(false)
-    const [error, setError] = useState(false)
+    const cart = useSelector((state: State) => state.auth.cart)(cart);
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         dispatch(setTotal());
     }, [dispatch]);
 
     const onSuccess = () => {
-        setSuccess(true)
+        setSuccess(true);
         setTimeout(() => {
-            setSuccess(false)
-        }, 2000)
-    }
+            setSuccess(false);
+        }, 2000);
+    };
     const onError = (err) => {
-        setError(true)
+        setError(true);
         setTimeout(() => {
-            setError(false)
-        }, 2000)
-    }
+            setError(false);
+        }, 2000);
+    };
 
-    const { mutate: updateUser, error: err } = useUpdateUser(user?._id, onSuccess, onError);
+    const { mutate: updateUser, error: err } = useUpdateUser(
+        user?._id,
+        onSuccess,
+        onError
+    );
 
     const submitHandler = async (values) => {
         const response = await axios.post(
             "http://localhost:8000/api/payment",
             cart
         );
-        console.log(response)
+        response;
         if (response.statusText === "OK") {
             window.location.href = response.data.url;
         }
@@ -62,7 +65,7 @@ const SignIn = () => {
         city: yup.string().required("this field is required"),
         state: yup.string().required("this field is required"),
         country: yup.string().required("this field is required"),
-    })
+    });
 
     const initialValues = {
         house: user?.address?.house,
@@ -71,7 +74,7 @@ const SignIn = () => {
         city: user?.address?.city,
         state: user?.address?.state,
         country: user?.address?.country,
-    }
+    };
 
     return (
         <Smooth className=" h-screen flex justify-center items-center text-sm bg-gradient-to-r from-gray-100 to-gray-200 text-gray-500">
@@ -79,7 +82,11 @@ const SignIn = () => {
             {error && <SuccessModel>{err.response.data.message}</SuccessModel>}
             <Head>
                 <title>Myntra - checkout</title>
-                <link rel="icon" type="image/png" href="https://images.indianexpress.com/2021/01/myntra.png" />
+                <link
+                    rel="icon"
+                    type="image/png"
+                    href="https://images.indianexpress.com/2021/01/myntra.png"
+                />
                 <meta
                     name="description"
                     content="The only online store you will need to fulfill all your needs"
@@ -98,16 +105,20 @@ const SignIn = () => {
                             Welcome to Myntra
                         </h2>
                     </div>
-                    <Formik initialValues={initialValues} onSubmit={submitHandler} validationSchema={validationObject} validateOnBlur={true} validateOnChange={true}>
+                    <Formik
+                        initialValues={initialValues}
+                        onSubmit={submitHandler}
+                        validationSchema={validationObject}
+                        validateOnBlur={true}
+                        validateOnChange={true}
+                    >
                         {(props) => (
-                            <Form
-                                className=" items-center"
-                            >
+                            <Form className=" items-center">
                                 <div className=" grid grid-cols-2 gap-10 gap-y-4 mb-10">
                                     <div className=" flex flex-col items-start ">
                                         <TextField
                                             error={props.errors.house}
-                                            label='house'
+                                            label="house"
                                             variant="standard"
                                             type="text"
                                             name="house"
@@ -115,13 +126,18 @@ const SignIn = () => {
                                             value={props.values.house}
                                             onChange={props.handleChange}
                                             onBlur={props.handleBlur}
-                                            helperText={props.errors.house && props.touched.house ? props.errors.house : ''}
+                                            helperText={
+                                                props.errors.house &&
+                                                props.touched.house
+                                                    ? props.errors.house
+                                                    : ""
+                                            }
                                         />
                                     </div>
                                     <div className=" flex flex-col items-start ">
                                         <TextField
                                             error={props.errors.street}
-                                            label='street'
+                                            label="street"
                                             variant="standard"
                                             type="text"
                                             name="street"
@@ -129,13 +145,18 @@ const SignIn = () => {
                                             value={props.values.street}
                                             onChange={props.handleChange}
                                             onBlur={props.handleBlur}
-                                            helperText={props.errors.street && props.touched.street ? props.errors.street : ''}
+                                            helperText={
+                                                props.errors.street &&
+                                                props.touched.street
+                                                    ? props.errors.street
+                                                    : ""
+                                            }
                                         />
                                     </div>
                                     <div className=" flex flex-col items-start ">
                                         <TextField
                                             error={props.errors.area}
-                                            label='area'
+                                            label="area"
                                             variant="standard"
                                             type="text"
                                             name="area"
@@ -143,13 +164,18 @@ const SignIn = () => {
                                             value={props.values.area}
                                             onChange={props.handleChange}
                                             onBlur={props.handleBlur}
-                                            helperText={props.errors.area && props.touched.area ? props.errors.area : ''}
+                                            helperText={
+                                                props.errors.area &&
+                                                props.touched.area
+                                                    ? props.errors.area
+                                                    : ""
+                                            }
                                         />
                                     </div>
                                     <div className=" flex flex-col items-start ">
                                         <TextField
                                             error={props.errors.city}
-                                            label='city'
+                                            label="city"
                                             variant="standard"
                                             type="text"
                                             name="city"
@@ -157,13 +183,18 @@ const SignIn = () => {
                                             value={props.values.city}
                                             onChange={props.handleChange}
                                             onBlur={props.handleBlur}
-                                            helperText={props.errors.city && props.touched.city ? props.errors.city : ''}
+                                            helperText={
+                                                props.errors.city &&
+                                                props.touched.city
+                                                    ? props.errors.city
+                                                    : ""
+                                            }
                                         />
                                     </div>
                                     <div className=" flex flex-col items-start ">
                                         <TextField
                                             error={props.errors.state}
-                                            label='state'
+                                            label="state"
                                             variant="standard"
                                             type="text"
                                             name="state"
@@ -171,21 +202,33 @@ const SignIn = () => {
                                             value={props.values.state}
                                             onChange={props.handleChange}
                                             onBlur={props.handleBlur}
-                                            helperText={props.errors.state && props.touched.state ? props.errors.state : ''}
+                                            helperText={
+                                                props.errors.state &&
+                                                props.touched.state
+                                                    ? props.errors.state
+                                                    : ""
+                                            }
                                         />
                                     </div>
                                     <div className=" flex flex-col items-start ">
                                         <TextField
                                             error={props.errors.country}
-                                            label='country'
+                                            label="country"
                                             variant="standard"
                                             type="text"
                                             name="country"
-                                            defaultValue={user?.address?.country}
+                                            defaultValue={
+                                                user?.address?.country
+                                            }
                                             value={props.values.country}
                                             onChange={props.handleChange}
                                             onBlur={props.handleBlur}
-                                            helperText={props.errors.country && props.touched.country ? props.errors.country : ''}
+                                            helperText={
+                                                props.errors.country &&
+                                                props.touched.country
+                                                    ? props.errors.country
+                                                    : ""
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -202,7 +245,6 @@ const SignIn = () => {
                 </div>
             </div>
         </Smooth>
-
     );
 };
 

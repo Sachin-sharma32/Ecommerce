@@ -24,10 +24,9 @@ const Cart = () => {
     const user = useSelector((state: State) => state.auth.user);
     const cart = useSelector((state: State) => state.auth.cart);
     const [success, setSuccess] = useState(false);
-    const [wishListSuccess, setWishListSuccess] = useState(false)
+    const [wishListSuccess, setWishListSuccess] = useState(false);
     const [removed, setRemoved] = useState(false);
-    console.log(cart)
-
+    cart;
 
     const onAddSuccess = () => {
         setTimeout(() => {
@@ -67,16 +66,19 @@ const Cart = () => {
     };
 
     const onWishListSuccess = () => {
-        setWishListSuccess(true)
+        setWishListSuccess(true);
         setTimeout(() => {
             setRemoved(false);
-        }, 2000)
-    }
-    const wishList = useSelector((state) => state.auth.wishList)
-    const { mutate: addToWishList } = useAddToWishList(wishList?._id, onWishListSuccess)
+        }, 2000);
+    };
+    const wishList = useSelector((state) => state.auth.wishList);
+    const { mutate: addToWishList } = useAddToWishList(
+        wishList?._id,
+        onWishListSuccess
+    );
     const addPrudoctToWishList = (productId, color, size) => {
-        addToWishList({ productId, color, size })
-    }
+        addToWishList({ productId, color, size });
+    };
 
     const submitHandler = async () => {
         if (token) {
@@ -84,12 +86,12 @@ const Cart = () => {
                 "http://localhost:8000/api/payment",
                 cart
             );
-            console.log(response)
+            response;
             if (response.statusText === "OK") {
                 window.location.href = response.data.url;
             }
         } else {
-            router.push('/signIn')
+            router.push("/signIn");
         }
     };
 
@@ -119,13 +121,14 @@ const Cart = () => {
                 >
                     CONTINUE SHOPPING
                 </Link>
-                {cart?.products?.length > 0 &&
-                    <button onClick={submitHandler}
+                {cart?.products?.length > 0 && (
+                    <button
+                        onClick={submitHandler}
                         className=" border bg-black text-white border-white hover:border-black rounded-sm flex justify-center items-center px-4 py-1 hover:bg-white hover:text-black transition-all duration-200"
                     >
                         CHECKOUT NOW
                     </button>
-                }
+                )}
             </div>
 
             <div className="grid grid-cols-1 mt-20 lg:grid-cols-2 gap-10 justify-items-center">
@@ -136,10 +139,11 @@ const Cart = () => {
                         )}
                         {cart &&
                             cart.products.map((item: ProductWithQuantity) => (
-                                <div key={item._id} className='border flex flex-col justify-center items-center'>
-                                    <div
-                                        className="flex gap-10 p-2  justify-between items-center w-full"
-                                    >
+                                <div
+                                    key={item._id}
+                                    className="border flex flex-col justify-center items-center"
+                                >
+                                    <div className="flex gap-10 p-2  justify-between items-center w-full">
                                         <div>
                                             <img
                                                 src={item.product.img[0]}
@@ -150,21 +154,35 @@ const Cart = () => {
                                         <div className="flex flex-col gap-1">
                                             <p>{item.product.title}</p>
                                             <p className=" text-sm font-semibold">
-                                                Rs. {item.product.discountPrice ? item.product.discountPrice : item.product.price}
+                                                Rs.{" "}
+                                                {item.product.discountPrice
+                                                    ? item.product.discountPrice
+                                                    : item.product.price}
                                             </p>
                                             <div className="flex gap-4">
                                                 <select
                                                     name="color"
                                                     id=""
                                                     className=" bg-white border p-1 text-center outline-non"
-                                                    onChange={(e) => addProductToCart({ itemId: item._id, color: e.target.value })}
+                                                    onChange={(e) =>
+                                                        addProductToCart({
+                                                            itemId: item._id,
+                                                            color: e.target
+                                                                .value,
+                                                        })
+                                                    }
                                                 >
                                                     {item.product.color.map(
                                                         (col) => (
                                                             <>
                                                                 <option
                                                                     value={col}
-                                                                    selected={col === item.color ? true : false}
+                                                                    selected={
+                                                                        col ===
+                                                                        item.color
+                                                                            ? true
+                                                                            : false
+                                                                    }
                                                                 >
                                                                     {col}
                                                                 </option>
@@ -176,14 +194,25 @@ const Cart = () => {
                                                     name="size"
                                                     id=""
                                                     className=" bg-white border p-1 text-center outline-non"
-                                                    onChange={(e) => addProductToCart({ itemId: item._id, size: e.target.value })}
+                                                    onChange={(e) =>
+                                                        addProductToCart({
+                                                            itemId: item._id,
+                                                            size: e.target
+                                                                .value,
+                                                        })
+                                                    }
                                                 >
                                                     {item.product.size.map(
                                                         (value) => (
                                                             <>
                                                                 <option
-                                                                    value={value}
-                                                                    selected={value == item.size}
+                                                                    value={
+                                                                        value
+                                                                    }
+                                                                    selected={
+                                                                        value ==
+                                                                        item.size
+                                                                    }
                                                                 >
                                                                     {value}
                                                                 </option>
@@ -209,9 +238,14 @@ const Cart = () => {
                                                 </p>
                                                 <button
                                                     onClick={() => {
-                                                        addProductToCart(
-                                                            { productId: item.product._id, quantity: 1, color: item.color, size: item.size }
-                                                        );
+                                                        addProductToCart({
+                                                            productId:
+                                                                item.product
+                                                                    ._id,
+                                                            quantity: 1,
+                                                            color: item.color,
+                                                            size: item.size,
+                                                        });
                                                     }}
                                                 >
                                                     <AddIcon className=" cursor-pointer" />
@@ -220,39 +254,87 @@ const Cart = () => {
                                         </div>
                                     </div>
                                     <div className="w-full flex justify-evenly border-t">
-                                        <button className=" uppercase w-full border-r hover:bg-gray-500 hover:text-white transition-all duration-200" onClick={() => { removeProductFromCart(item.product._id, item.quantity) }}>Remove</button>
-                                        <button className=" uppercase w-full hover:bg-gray-500 hover:text-white transition-all duration-200" onClick={() => { addPrudoctToWishList(item.product._id, item.color, item.size); removeProductFromCart(item.product._id, item.quantity) }}>move to wistlist</button>
+                                        <button
+                                            className=" uppercase w-full border-r hover:bg-gray-500 hover:text-white transition-all duration-200"
+                                            onClick={() => {
+                                                removeProductFromCart(
+                                                    item.product._id,
+                                                    item.quantity
+                                                );
+                                            }}
+                                        >
+                                            Remove
+                                        </button>
+                                        <button
+                                            className=" uppercase w-full hover:bg-gray-500 hover:text-white transition-all duration-200"
+                                            onClick={() => {
+                                                addPrudoctToWishList(
+                                                    item.product._id,
+                                                    item.color,
+                                                    item.size
+                                                );
+                                                removeProductFromCart(
+                                                    item.product._id,
+                                                    item.quantity
+                                                );
+                                            }}
+                                        >
+                                            move to wistlist
+                                        </button>
                                     </div>
                                 </div>
                             ))}
                     </ErrorBoundry>
                 </div>
-                {cart?.products.length > 0 &&
+                {cart?.products.length > 0 && (
                     <div className=" border w-fit p-4 flex flex-col gap-4 justify-center text-left rounded-sm h-fit sticky top-20">
                         <h2 className=" text-xl font-semibold text-center">
                             ORDER SUMMARY
                         </h2>
                         <table className="border border-collapse">
                             <tr className=" bg-gray-100">
-                                <td className=" border w-32 p-2 text-left">Name</td>
+                                <td className=" border w-32 p-2 text-left">
+                                    Name
+                                </td>
                                 <td className=" border w-32 p-2">Quantity</td>
-                                <td className=" border w-32 p-2 text-left">Unit Price</td>
-                                <td className=" border w-32 p-2 text-left">SubTotal</td>
+                                <td className=" border w-32 p-2 text-left">
+                                    Unit Price
+                                </td>
+                                <td className=" border w-32 p-2 text-left">
+                                    SubTotal
+                                </td>
                             </tr>
                             {cart.products.map((product) => (
                                 <tr key={product._id}>
-                                    <td className=" border w-32 p-2 text-left">{product.product.title}</td>
-                                    <td className=" border w-32 p-2">{product.quantity}</td>
-                                    <td className=" border w-32 p-2 text-left">{product.product.discountPrice ? product.product.discountPrice : product.product.price}</td>
-                                    <td className=" border w-32 p-2 text-left">{product.product.discountPrice ? product.product.discountPrice * product.quantity : product.product.price * product.quantity}</td>
+                                    <td className=" border w-32 p-2 text-left">
+                                        {product.product.title}
+                                    </td>
+                                    <td className=" border w-32 p-2">
+                                        {product.quantity}
+                                    </td>
+                                    <td className=" border w-32 p-2 text-left">
+                                        {product.product.discountPrice
+                                            ? product.product.discountPrice
+                                            : product.product.price}
+                                    </td>
+                                    <td className=" border w-32 p-2 text-left">
+                                        {product.product.discountPrice
+                                            ? product.product.discountPrice *
+                                              product.quantity
+                                            : product.product.price *
+                                              product.quantity}
+                                    </td>
                                 </tr>
-
                             ))}
                             <tr className="text-black">
                                 <td className=" w-32 p-2"></td>
                                 <td className="w-32 p-2 text-left"></td>
-                                <td className="w-32 p-2 text-left border bg-gray-100 font-extrabold text-gray-500">Total</td>
-                                <td className=" w-32 p-2 text-left mt-10 border bg-gray-100 font-extrabold text-gray-500">{total}</td>
+                                <td className="w-32 p-2 text-left border bg-gray-100 font-extrabold text-gray-500">
+                                    Total
+                                </td>
+                                <td className=" w-32 p-2 text-left mt-10 border bg-gray-100 font-extrabold text-gray-500">
+                                    {total}
+                                </td>
                             </tr>
                         </table>
                         <button
@@ -262,8 +344,8 @@ const Cart = () => {
                             CHECKOUT NOW
                         </button>
                     </div>
-                }
-            </div >
+                )}
+            </div>
         </Smooth>
     );
 };

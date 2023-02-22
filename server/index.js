@@ -33,7 +33,7 @@ const stripe = require("stripe")(
 const app = express();
 
 //? 2
-//* parse (read) incomming cookie
+//* parse (read) incoming cookie
 app.use(cookieParser());
 
 app.use(compression());
@@ -58,7 +58,7 @@ app.post(
     "/webhook",
     bodyParser.raw({ type: "application/json" }),
     async (req, res) => {
-        //------------ verify that the response is comming from stripe
+        //------------ verify that the response is coming from stripe
         //* stripe listen --print-secret -> signature
         //* stripe listen --forward-to=localhost:8000/webhook
         //* stripe trigger customer.created -> trigger fake event
@@ -81,7 +81,7 @@ app.post(
                 const cart = await Cart.findOne({
                     userId: { $in: [customer.metadata.userId] },
                 });
-                console.log(cart);
+                cart;
                 const order = await Order.create({
                     userId: cart.userId,
                     products: cart.products,
@@ -91,7 +91,7 @@ app.post(
                 });
             }
         } catch (err) {
-            console.log(err);
+            err;
             return res.status(500).json({ err });
         }
 
@@ -148,7 +148,7 @@ app.post("/api/payment", async (req, res) => {
             submit_type: "pay",
             mode: "payment",
             // customer_email: user.email,
-            payment_method_types: ["card", "googlePay"],
+            payment_method_types: ["card"],
             billing_address_collection: "required",
             phone_number_collection: {
                 enabled: true,
@@ -217,7 +217,7 @@ app.post("/api/payment", async (req, res) => {
         const session = await stripe.checkout.sessions.create(params);
         res.status(200).json({ url: session.url });
     } catch (err) {
-        console.log(err);
+        err;
         res.status(500).json({
             status: "error",
             message: err.message,
@@ -256,7 +256,7 @@ const handleExpirationalError = (err) =>
     new AppError("your jwt token has expired", 404);
 
 app.use((err, req, res, next) => {
-    console.log(err);
+    err;
     let { ...error } = err;
     if (err.name === "CastError") error = handleCastError(error);
     if (err.code === 11000) error = handleDuplicateFieldError(error);
@@ -264,13 +264,13 @@ app.use((err, req, res, next) => {
     if (err.name === "JsonWebTokenError") error = handleJWTError(error);
     if (err.name === "TokenExpiredError")
         error = handleExpirationalError(error);
-    // res.status(error.statusCode).json({
-    //     status: error.status,
-    //     message: error.msg,
-    // });
-    res.status(500).json({
-        message: err.message,
+    res.status(error.statusCode).json({
+        status: error.status,
+        message: error.msg,
     });
+    // res.status(500).json({
+    //     message: err.message,
+    // });
 });
 
 mongoose
@@ -278,9 +278,9 @@ mongoose
         "mongodb+srv://sachin:sachin1234@cluster0.rum0d3d.mongodb.net/?retryWrites=true&w=majority"
     )
     .then((connection) => {
-        console.log("connected to db");
+        ("connected to db");
     });
 
 app.listen(8000, () => {
-    console.log("server is up and running");
+    ("server is up and running");
 });

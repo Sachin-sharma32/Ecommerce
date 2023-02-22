@@ -25,7 +25,6 @@ export const useGetCart = (userId: string) => {
                 return cart;
             },
             onSuccess: (data) => {
-                ('refetch')
                 dispatch(setCart(data));
             },
             enabled: !!userId,

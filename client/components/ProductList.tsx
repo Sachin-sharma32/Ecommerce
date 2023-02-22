@@ -119,3 +119,4 @@ const ProductList = ({ sort, color, size, search, limit, featured }: AppProps) =
 };
 
 export default React.memo(ProductList);
+

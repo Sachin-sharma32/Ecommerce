@@ -24,14 +24,14 @@ const AllProducts = () => {
     const productsPerPage = 5;
     const products = useSelector((state) => state.auth.products);
     const [currentPage, setCurrentPage] = useState(1);
-    console.log(currentPage);
+    currentPage;
     const pages = [];
     if (products) {
         for (let i = 1; i < Math.ceil(products.length / productsPerPage); i++) {
             pages.push(i);
         }
     }
-    console.log(pages);
+    pages;
 
     const lastProductIndex = currentPage * productsPerPage;
     const firstProductIndex = lastProductIndex - productsPerPage;
@@ -39,7 +39,7 @@ const AllProducts = () => {
         firstProductIndex,
         lastProductIndex
     );
-    console.log(lastProductIndex, firstProductIndex);
+    lastProductIndex, firstProductIndex;
 
     const user = useSelector((state: State): User => state.auth.user);
     const cart = useSelector((state: State) => state.auth.cart);

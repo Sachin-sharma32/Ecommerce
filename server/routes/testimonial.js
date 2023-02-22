@@ -3,6 +3,6 @@ const { createTestimonial, getAllTestimonials } = require("../controllers/testim
 
 const router = require("express").Router();
 
-router.route("/").get(getAllTestimonials).post(verifyToken, createTestimonial);
+router.route("/").get(getAllTestimonials).post(createTestimonial);
 
 module.exports = router;

@@ -56,7 +56,7 @@ const Footer = () => {
                     <PhoneIcon />
                     <p>91+ 6367212438</p>
                 </a>
-                <a href="mailto: sachin2sharma001@gmail.com" className="flex gap-2 w-fulll">
+                <a href="mailto: sachin2sharma001@gmail.com" className="flex gap-2 w-full">
                     <MailIcon />
                     <p>sachin2sharma001@gmail</p>
                 </a>

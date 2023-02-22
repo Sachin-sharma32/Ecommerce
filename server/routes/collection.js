@@ -14,6 +14,6 @@ router.route("/:id").delete(verifyAdmin, deleteCollection);
 router
     .route("/")
     .post(verifyAdmin, createCollection)
-    .get(verifyToken, getAllCollections);
+    .get(getAllCollections);
 
 module.exports = router;

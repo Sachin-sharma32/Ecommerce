@@ -6,11 +6,15 @@ import { useState } from "react";
 import ErrorBoundry from "../utils/ErrorBoundry";
 import { sliderClasses } from "@mui/material";
 import { useSelector } from "react-redux";
-import CategoryCard from "./CollectionCard";
-import CollectionCard from "./CollectionCard";
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation, Autoplay, EffectCoverflow, Keyboard } from "swiper";
+import {
+    Pagination,
+    Navigation,
+    Autoplay,
+    EffectCoverflow,
+    Keyboard,
+} from "swiper";
 import "swiper/css";
 import "swiper/swiper.min.css";
 import "swiper/css/pagination";
@@ -18,20 +22,24 @@ import "swiper/css/navigation";
 import "swiper/css/effect-coverflow";
 import Smooth from "../utils/smooth";
 
-
 const Header = () => {
-    const selectedCategory = useSelector((state) => state.auth.selectedCategory)
+    const selectedCategory = useSelector(
+        (state) => state.auth.selectedCategory
+    );
     let collections = useSelector((state) => state.auth.collections);
-    const [filterCollection, setFilterCollection] = useState([])
+    collections;
+    const [filterCollection, setFilterCollection] = useState([]);
     useEffect(() => {
         if (selectedCategory) {
-            setFilterCollection(collections.filter((collection) => {
-                return collection.category == selectedCategory.title
-            }))
+            setFilterCollection(
+                collections.filter((collection) => {
+                    return collection.category == selectedCategory.title;
+                })
+            );
         } else {
-            setFilterCollection(collections)
+            setFilterCollection(collections);
         }
-    }, [filterCollection, collections, selectedCategory])
+    }, [filterCollection, collections, selectedCategory]);
     return (
         <Smooth className="mt-[7rem] min-h-[60vh] max-h-[100vh]">
             <Swiper
@@ -39,7 +47,7 @@ const Header = () => {
                 breakpoints={{
                     0: {
                         slidesPerView: 1,
-                        spaceBetween: 10
+                        spaceBetween: 10,
                     },
                     600: {
                         slidesPerView: 2,
@@ -48,8 +56,7 @@ const Header = () => {
                     900: {
                         slidesPerView: 3,
                         spaceBetween: 50,
-
-                    }
+                    },
                 }}
                 coverflowEffect={{
                     rotate: 50,
@@ -71,7 +78,13 @@ const Header = () => {
                 keyboard={{
                     enabled: true,
                 }}
-                modules={[Pagination, Navigation, Autoplay, EffectCoverflow, Keyboard]}
+                modules={[
+                    Pagination,
+                    Navigation,
+                    Autoplay,
+                    EffectCoverflow,
+                    Keyboard,
+                ]}
                 className="mySwiper"
                 autoplay={{
                     delay: 3000,
@@ -79,11 +92,16 @@ const Header = () => {
                 }}
             >
                 {filterCollection?.map((collection) => (
-                    <SwiperSlide key={collection._id} className=" h-[20%] mb-10" > <HeaderCard card={collection} /></SwiperSlide>
+                    <SwiperSlide
+                        key={collection._id}
+                        className=" h-[20%] mb-10"
+                    >
+                        {" "}
+                        <HeaderCard card={collection} />
+                    </SwiperSlide>
                 ))}
-
             </Swiper>
-        </Smooth >
+        </Smooth>
     );
 };
 

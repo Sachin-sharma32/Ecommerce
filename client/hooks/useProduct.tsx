@@ -4,39 +4,27 @@ import { useSelector } from "react-redux";
 import { Product, State } from "../utils/types";
 
 export const useGetProducts = (onSuccess) => {
-    const token = useSelector((state: State) => state.auth.accessToken);
     return useQuery(
         "products",
         () => {
-            return axios.get("http://localhost:8000/api/v1/products", {
-                headers: {
-                    authorization: `Bearer ${token}`,
-                },
-            });
+            return axios.get("http://localhost:8000/api/v1/products");
         },
         {
             select: (data) => {
                 const products = data.data.data.docs;
                 return products;
             },
-            enabled: !!token,
-            onSuccess: onSuccess
+            onSuccess: onSuccess,
         }
     );
 };
 
 export const useGetProduct = (productId: string, onSuccess) => {
-    const token = useSelector((state: State) => state.auth.accessToken);
     return useQuery(
         "product",
         () => {
             return axios.get(
-                `http://localhost:8000/api/v1/products/${productId}`,
-                {
-                    headers: {
-                        authorization: `Bearer ${token}`,
-                    },
-                }
+                `http://localhost:8000/api/v1/products/${productId}`
             );
         },
         {
@@ -44,7 +32,6 @@ export const useGetProduct = (productId: string, onSuccess) => {
                 const product = data.data.data.doc;
                 return product;
             },
-            enabled: !!token,
             onSuccess: onSuccess,
         }
     );
@@ -69,9 +56,9 @@ export const useCreateProduct = (onSuccess: () => void, onError) => {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries("products");
-                onSuccess()
+                onSuccess();
             },
-            onError: onError
+            onError: onError,
         }
     );
 };
@@ -95,9 +82,9 @@ export const useUpdateProduct = (productId: string, onSuccess, onError) => {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries("products");
-                onSuccess()
+                onSuccess();
             },
-            onError: onError
+            onError: onError,
         }
     );
 };
@@ -124,7 +111,7 @@ export const useDeleteProduct = (onSuccess) => {
             },
             onSuccess: () => {
                 queryClient.invalidateQueries("products");
-                onSuccess()
+                onSuccess();
             },
         }
     );

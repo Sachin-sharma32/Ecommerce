@@ -13,7 +13,6 @@ import Link from 'next/link';
 
 
 const Collections = () => {
-  const categories = useSelector((state) => state.auth.categories)
   const collections = useSelector((state) => state.auth.collections)
   const products = useSelector((state) => state.auth.products)
   const selectedCategory = useSelector((state) => state.auth.selectedCategory)

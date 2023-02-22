@@ -12,7 +12,7 @@ const initialState = {
     selectedCategory: null,
     wishList: null,
     ratings: null,
-    orders: null
+    orders: null,
 };
 
 const authSlice = createSlice({
@@ -29,33 +29,40 @@ const authSlice = createSlice({
             state.cart = action.payload;
         },
         setTotal: (state) => {
-            state.total =
-                state.cart?.products.reduce((acc: number, item: ProductWithQuantity) => {
-                    return acc + (item.quantity * (item.product.discountPrice ? item.product.discountPrice : item.product.price))
-                }, 0);
+            state.total = state.cart?.products.reduce(
+                (acc: number, item: ProductWithQuantity) => {
+                    return (
+                        acc +
+                        item.quantity *
+                            (item.product.discountPrice
+                                ? item.product.discountPrice
+                                : item.product.price)
+                    );
+                },
+                0
+            );
         },
         setToken: (state, action) => {
             state.accessToken = action.payload;
         },
         setCategories: (state, action) => {
-            state.categories = action.payload
+            state.categories = action.payload;
         },
         setCollections: (state, action) => {
-            state.collections = action.payload
+            state.collections = action.payload;
         },
         setSelectedCategory: (state, action) => {
-            state.selectedCategory = action.payload
+            state.selectedCategory = action.payload;
         },
         setWishList: (state, action) => {
-            state.wishList = action.payload
+            state.wishList = action.payload;
         },
         setRatings: (state, action) => {
-            state.ratings = action.payload
+            state.ratings = action.payload;
         },
         setOrders: (state, action) => {
-            state.orders = action.payload
-            console.log(state.orders)
-        }
+            state.orders = action.payload(state.orders);
+        },
     },
 });
 
@@ -70,6 +77,6 @@ export const {
     setSelectedCategory,
     setWishList,
     setRatings,
-    setOrders
+    setOrders,
 } = authSlice.actions;
 export default authSlice.reducer;

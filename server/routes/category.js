@@ -19,6 +19,6 @@ router.route("/:id").delete(verifyAdmin, deleteCategory);
 router
     .route("/")
     .post(verifyAdmin, createCategory)
-    .get(verifyToken, getAllCategories);
+    .get(getAllCategories);
 
 module.exports = router;

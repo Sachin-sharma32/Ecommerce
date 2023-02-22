@@ -14,13 +14,7 @@ const {
 
 const router = express.Router();
 
-router
-    .route("/:id")
-    .delete(verifyAdmin, deleteRating)
-    .get(verifyToken, getRating);
-router
-    .route("/")
-    .post(verifyToken, createRating)
-    .get(verifyToken, getAllRatings);
+router.route("/:id").delete(deleteRating).get(getRating);
+router.route("/").post(createRating).get(getAllRatings);
 
 module.exports = router;

@@ -100,7 +100,9 @@ const SignInUser = () => {
                 />
             </Head>
             {success && <SuccessModel>Logged in successfully</SuccessModel>}
-            {isError && <ErrorModel>{error?.response.data.message}</ErrorModel>}
+            {isError && (
+                <ErrorModel>{error?.response?.data?.message}</ErrorModel>
+            )}
             <div className="mt-[4rem] grid grid-cols-1 lg:grid-cols-2 form__background  h-fit shadow-2xl justify-items-center min-w-[70vw] max-w-[90%]">
                 <div className=" w-fit p-10 text-center flex flex-col gap-4">
                     <div className=" text-center m-auto w-fit flex flex-col items-center">
@@ -141,19 +143,17 @@ const SignInUser = () => {
                                 >
                                     {formik.errors.email
                                         ? formik.errors.email
-                                        : ""}ADbg-white  rounded-sm focus:shadow-lg"
+                                        : ""}
+                                </Error>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    className=" p-2 w-60 outline-none bg-white  rounded-sm focus:shadow-lg"
                                     onChange={formik.handleChange}
                                     value={formik.values.password}
                                     onBlur={formik.handleBlur}
                                     required
                                 />
-                                <Link
-                                    href="/forgotPassword"
-                                    className="flex items-center gap-1 hover:gap-4 transition-all duration-200 hover:border-b-gray-500 border-b border-b-transparent"
-                                >
-                                    <p>Forgot Password</p>
-                                    <EastIcon />
-                                </Link>
                                 <Error
                                     className={
                                         formik.errors.password
@@ -165,6 +165,13 @@ const SignInUser = () => {
                                         ? formik.errors.password
                                         : ""}
                                 </Error>
+                                <Link
+                                    href="/forgotPassword"
+                                    className="flex items-center gap-1 hover:gap-4 transition-all duration-200 hover:border-b-gray-500 border-b border-b-transparent"
+                                >
+                                    <p>Forgot Password</p>
+                                    <EastIcon />
+                                </Link>
                             </div>
                         </div>
                         <button

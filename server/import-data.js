@@ -17,7 +17,7 @@ mongoose
         "mongodb+srv://sachin:sachin1234@cluster0.rum0d3d.mongodb.net/?retryWrites=true&w=majority"
     )
     .then(() => {
-        console.log("connected to db");
+        ("connected to db");
     });
 
 const deleteAllData = async (req, res) => {
@@ -25,9 +25,9 @@ const deleteAllData = async (req, res) => {
         await Collection.deleteMany();
         // await Category.deleteMany();
         // await Product.deleteMany();
-        console.log("db is now empty");
+        ("db is now empty");
     } catch (err) {
-        console.log(err);
+        err;
     }
 };
 
@@ -36,9 +36,9 @@ const importData = async (req, res) => {
         // await Product.insertMany(productData);
         // await Category.insertMany(categoryData);
         await Collection.insertMany(collectionData);
-        console.log("data imported");
+        ("data imported");
     } catch (err) {
-        console.log(err);
+        err;
     }
 };
 

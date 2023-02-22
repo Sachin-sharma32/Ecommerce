@@ -2,7 +2,7 @@ const Order = require("../models/order.js");
 const catchAsync = require("../utils/catchAsync.js");
 
 exports.updateOrder = catchAsync(async (req, res, next) => {
-    console.log(req.body);
+    req.body;
     const { id } = req.params;
     const updatedDoc = await Order.findByIdAndUpdate(id, req.body, {
         // runValidators: true,

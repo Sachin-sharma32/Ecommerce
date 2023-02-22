@@ -21,12 +21,10 @@ const userSchema = new mongoose.Schema(
         },
         password: {
             type: String,
-            required: true,
             minlength: [6, "password should be atleast 6 characters long"],
         },
         passwordConfirm: {
             type: String,
-            required: true,
             validate: {
                 validator: function (el) {
                     return el === this.password;
@@ -55,10 +53,7 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.methods.comparePasswords = async (userPassword, requestPassword) => {
-    const hastPassword = cryptoJs.AES.decrypt(
-        userPassword,
-        "sachin1234"
-    );
+    const hastPassword = cryptoJs.AES.decrypt(userPassword, "sachin1234");
 
     const password = hastPassword.toString(cryptoJs.enc.Utf8);
     return password === requestPassword;
@@ -71,11 +66,7 @@ userSchema.methods.createPasswordResetToken = async function () {
     ).toString();
     this.passwordResetToken = resetToken;
     this.passwordResetExpiry = Date.now() + 10 * 1000 * 60;
-    console.log(
-        this.passwordResetExpiry,
-        this.passwordResetToken,
-        new Date(Date.now())
-    );
+    this.passwordResetExpiry, this.passwordResetToken, new Date(Date.now());
     return resetToken;
 };
 

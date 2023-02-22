@@ -2,7 +2,14 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../app/slices";
-import { CreateUser, LogIn, State, UpdateAddress, UpdateUser, User } from "../utils/types";
+import {
+    CreateUser,
+    LogIn,
+    State,
+    UpdateAddress,
+    UpdateUser,
+    User,
+} from "../utils/types";
 
 export const useRegister = (onSuccess, onError) => {
     return useMutation(
@@ -23,6 +30,7 @@ export const useRegister = (onSuccess, onError) => {
 export const useLogin = (onSuccess: (data: any) => void, onError) => {
     return useMutation(
         (user: LogIn) => {
+            user;
             return axios.post("http://localhost:8000/api/v1/auth/login", user, {
                 //? 8
                 withCredentials: true,
@@ -30,7 +38,7 @@ export const useLogin = (onSuccess: (data: any) => void, onError) => {
         },
         {
             onSuccess: onSuccess,
-            onError: onError
+            onError: onError,
         }
     );
 };
@@ -44,7 +52,7 @@ export const useRefresh = (onSuccess) => {
             });
         },
         {
-            refetchInterval: 1000 * 20,
+            // refetchInterval: 1000 * 20,
             refetchIntervalInBackground: true,
             onSuccess: onSuccess,
             select: (data) => {
@@ -54,7 +62,6 @@ export const useRefresh = (onSuccess) => {
         }
     );
 };
-
 
 export const useGetMe = (onSuccess?: (user: User) => void) => {
     const token = useSelector((state: State) => state.auth.accessToken);
@@ -100,7 +107,11 @@ export const useLogout = () => {
     );
 };
 
-export const useUpdateUser = (userId: string, onSuccess?: () => void, onError?: (error?: any) => void) => {
+export const useUpdateUser = (
+    userId: string,
+    onSuccess?: () => void,
+    onError?: (error?: any) => void
+) => {
     const token = useSelector((state: State) => state.auth.accessToken);
     const queryClient = useQueryClient();
     return useMutation(
@@ -120,9 +131,9 @@ export const useUpdateUser = (userId: string, onSuccess?: () => void, onError?: 
             enabled: !!userId,
             onSuccess: () => {
                 queryClient.invalidateQueries("me");
-                onSuccess()
+                onSuccess();
             },
-            onError: onError
+            onError: onError,
         }
     );
 };

@@ -8,13 +8,12 @@ import { Order, ProductWithDetails, State } from "../utils/types";
 import OrdersTable from "./OrdersTable";
 
 const MyOrders = () => {
-    const orders = useSelector((state) => state.auth.orders)
-    console.log(orders)
-    const myOrders = orders
+    const orders = useSelector((state) => state.auth.orders)(orders);
+    const myOrders = orders;
 
     return (
         <div className=" min-w-[500px]">
-            <OrdersTable orders={orders}/>
+            <OrdersTable orders={orders} />
         </div>
     );
 };

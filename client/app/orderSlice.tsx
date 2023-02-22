@@ -1,7 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { Address, User } from "../utils/types";
 
 const initialState = {
     loading: false,

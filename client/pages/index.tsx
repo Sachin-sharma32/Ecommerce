@@ -40,7 +40,6 @@ export default function Home() {
             <ErrorBoundry>
                 <Newsletter />
             </ErrorBoundry>
-            <Practice />
         </Smooth>
     );
 }
