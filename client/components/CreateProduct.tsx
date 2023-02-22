@@ -202,7 +202,7 @@ const UpdateAccount = () => {
                                 <div className="w-full">
                                     <Field
                                         type="text"
-                                        className="w-full border-b rounded-sm px-4 py-2 outline-none bg-inherit"
+                                        className="w-full border-b rounded-lg px-4 py-2 outline-none bg-inherit"
                                         placeholder="Title"
                                         name="title"
                                     />
@@ -214,7 +214,7 @@ const UpdateAccount = () => {
                                 <div className=" w-full">
                                     <Field
                                         type="text"
-                                        className="w-full bg-white border-b  rounded-sm px-4 py-2 outline-none"
+                                        className="w-full bg-white border-b  rounded-lg px-4 py-2 outline-none"
                                         placeholder="Description"
                                         name="desc"
                                     />
@@ -226,7 +226,7 @@ const UpdateAccount = () => {
                                 <div className=" w-full">
                                     <Field
                                         type="number"
-                                        className=" w-full bg-white border-b  rounded-sm px-4 py-2 outline-none"
+                                        className=" w-full bg-white border-b  rounded-lg px-4 py-2 outline-none"
                                         placeholder="price"
                                         name="price"
                                     />
@@ -238,7 +238,7 @@ const UpdateAccount = () => {
                                 <div className=" w-full">
                                     <Field
                                         type="number"
-                                        className=" w-full bg-white border-b  rounded-sm px-4 py-2 outline-none"
+                                        className=" w-full bg-white border-b  rounded-lg px-4 py-2 outline-none"
                                         placeholder="Discount Price (optional)"
                                         name="discountPrice"
                                     />
@@ -250,7 +250,7 @@ const UpdateAccount = () => {
                                 <div className=" w-full">
                                     <Field
                                         type="text"
-                                        className=" w-full bg-white border-b  rounded-sm px-4 py-2 outline-none"
+                                        className=" w-full bg-white border-b  rounded-lg px-4 py-2 outline-none"
                                         placeholder="Offer (optional)"
                                         name="offer"
                                     />
@@ -326,7 +326,7 @@ const UpdateAccount = () => {
                                         </select>
                                     </div>
                                 </div>
-                                <div className=" border rounded-sm p-4 relative w-full flex justify-center">
+                                <div className=" border rounded-lg p-4 relative w-full flex justify-center">
                                     <label className=" font-bold absolute -top-2 bg-white">
                                         Size
                                     </label>
@@ -346,7 +346,7 @@ const UpdateAccount = () => {
                                                                 >
                                                                     <Field
                                                                         name={`size[${index}]`}
-                                                                        className=" bg-inherit border-b  rounded-sm px-4 py-2 outline-none"
+                                                                        className=" bg-inherit border-b  rounded-lg px-4 py-2 outline-none"
                                                                     />
                                                                     {index >
                                                                         0 && (
@@ -386,7 +386,7 @@ const UpdateAccount = () => {
                                         }}
                                     </FieldArray>
                                 </div>
-                                <div className=" border rounded-sm p-4 relative w-full flex justify-center">
+                                <div className=" border rounded-lg p-4 relative w-full flex justify-center">
                                     <label className=" font-bold absolute -top-2 bg-white">
                                         Colors
                                     </label>
@@ -406,7 +406,7 @@ const UpdateAccount = () => {
                                                                 >
                                                                     <Field
                                                                         name={`color[${index}]`}
-                                                                        className=" bg-inherit border-b  rounded-sm px-4 py-2 outline-none"
+                                                                        className=" bg-inherit border-b  rounded-lg px-4 py-2 outline-none"
                                                                     />
                                                                     {index >
                                                                         0 && (
@@ -456,7 +456,7 @@ const UpdateAccount = () => {
                                     />
                                 </div>
                                 <button
-                                    className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-sm hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200"
+                                    className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-lg hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200"
                                     type="submit"
                                     disabled={!props.isValid}
                                 >
@@ -490,7 +490,7 @@ const UpdateAccount = () => {
                                 <div className=" relative w-full" key={image}>
                                     <img
                                         src={image}
-                                        className="border-none w-[100px] h-[100px]"
+                                        className="border-none w-[150px] h-[150px]"
                                     />
                                     <button
                                         onClick={() => {
@@ -521,7 +521,7 @@ const UpdateAccount = () => {
                                 <img
                                     key={coverImg}
                                     src={coverImg}
-                                    className="border-none w-[100px] h-[100px]"
+                                    className="border-none w-[150px] h-[150px]"
                                 />
                                 <button onClick={removeCoverImg}>
                                     <CloseIcon className=" absolute top-0 right-0 cursor-pointer text-sm" />

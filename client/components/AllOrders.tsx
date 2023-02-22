@@ -13,10 +13,10 @@ const AllOrders = () => {
     const token = useSelector((state: any): string => state.auth.accessToken);
     const [current, setCurrent] = useState(0);
     const allTheOrders = useSelector((state) => state.auth.orders);
-    const [status, setStatus] = useState("")(allTheOrders);
+    const [status, setStatus] = useState("")
 
     return (
-        <div className="flex gap-4 text-xs">
+        <div className="flex gap-4 text-xs relative">
             <div className="lg:flex flex-col gap-2 hidden">
                 <button
                     className="flex gap-2 cursor-pointer hover:gap-4 transition-all duration-200 items-center  w-40"
@@ -47,7 +47,7 @@ const AllOrders = () => {
                     <EastIcon />
                 </button>
             </div>
-            <div className="absolute top-[5rem] left-1/2 -translate-x-1/2 lg:hidden w-[70vw]">
+            <div className="absolute left-1/2 -translate-x-1/2 lg:hidden w-[70vw]">
                 <div className="flex gap-4 justify-center">
                     <button
                         className={`gap-1 hover:gap-4 transition-all duration-200 flex items-center border-b border-white ${

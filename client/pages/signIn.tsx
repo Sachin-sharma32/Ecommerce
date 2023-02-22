@@ -128,7 +128,7 @@ const SignInUser = () => {
                                 <input
                                     type="email"
                                     name="email"
-                                    className=" p-2 w-60 outline-none bg-white  rounded-sm focus:shadow-lg"
+                                    className=" p-2 w-60 outline-none bg-white  rounded-lg focus:shadow-lg"
                                     onChange={formik.handleChange}
                                     value={formik.values.email}
                                     onBlur={formik.handleBlur}
@@ -148,7 +148,7 @@ const SignInUser = () => {
                                 <input
                                     type="password"
                                     name="password"
-                                    className=" p-2 w-60 outline-none bg-white  rounded-sm focus:shadow-lg"
+                                    className=" p-2 w-60 outline-none bg-white  rounded-lg focus:shadow-lg"
                                     onChange={formik.handleChange}
                                     value={formik.values.password}
                                     onBlur={formik.handleBlur}
@@ -175,7 +175,7 @@ const SignInUser = () => {
                             </div>
                         </div>
                         <button
-                            className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-sm hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200 mt-4 w-60"
+                            className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-lg hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200 mt-4 w-60"
                             type="submit"
                             disabled={!formik.isValid}
                         >
@@ -185,7 +185,7 @@ const SignInUser = () => {
                     <div className="flex flex-col w-full justify-center items-center gap-2">
                         <button
                             onClick={signInGoogle}
-                            className=" active:translate-y-5 border border-black text-black px-4 py-2 rounded-sm transition-all duration-200 w-60 flex gap-4 justify-center items-center"
+                            className=" active:translate-y-5 border border-black text-black px-4 py-2 rounded-lg transition-all duration-200 w-60 flex gap-4 justify-center items-center"
                         >
                             <img src="/google.png" className=" w-6" />{" "}
                             <p>Continue with google</p>

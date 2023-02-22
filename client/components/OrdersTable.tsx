@@ -28,7 +28,7 @@ const OrdersTable = ({ orders, admin, status }: AppProps) => {
     const dispatch = useDispatch();
     const onSuccess = (data) => {
         data;
-        dispatch(setOrders(data.data.data.docs));
+        // dispatch(setOrders(data.data.data.docs));
     };
 
     const { mutate: updateOrder, data } = useUpdateOrder(onSuccess);

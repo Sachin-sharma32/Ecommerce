@@ -8,7 +8,7 @@ import { Order, ProductWithDetails, State } from "../utils/types";
 import OrdersTable from "./OrdersTable";
 
 const MyOrders = () => {
-    const orders = useSelector((state) => state.auth.orders)(orders);
+    const orders = useSelector((state) => state.auth.orders)
     const myOrders = orders;
 
     return (

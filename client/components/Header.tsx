@@ -41,20 +41,19 @@ const Header = () => {
         }
     }, [filterCollection, collections, selectedCategory]);
     return (
-        <Smooth className="mt-[7rem] min-h-[60vh] max-h-[100vh]">
+        <Smooth className="min-h-screen z-10">
             <Swiper
-                effect={"coverflow"}
                 breakpoints={{
                     0: {
                         slidesPerView: 1,
                         spaceBetween: 10,
                     },
                     600: {
-                        slidesPerView: 2,
+                        slidesPerView: 1,
                         spaceBetween: 0,
                     },
                     900: {
-                        slidesPerView: 3,
+                        slidesPerView: 1,
                         spaceBetween: 50,
                     },
                 }}
@@ -69,7 +68,6 @@ const Header = () => {
                     "--swiper-pagination-color": "#fff",
                 }}
                 spaceBetween={30}
-                navigation={true}
                 grabCursor={true}
                 loop={true}
                 pagination={{
@@ -85,7 +83,7 @@ const Header = () => {
                     EffectCoverflow,
                     Keyboard,
                 ]}
-                className="mySwiper"
+                className="mySwiper z-10 !cursor-pointer"
                 autoplay={{
                     delay: 3000,
                     disableOnInteraction: false,
@@ -94,7 +92,7 @@ const Header = () => {
                 {filterCollection?.map((collection) => (
                     <SwiperSlide
                         key={collection._id}
-                        className=" h-[20%] mb-10"
+                        className=""
                     >
                         {" "}
                         <HeaderCard card={collection} />

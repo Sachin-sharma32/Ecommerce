@@ -211,7 +211,7 @@ app.post("/api/payment", async (req, res) => {
                 };
             }),
             success_url: `http://localhost:3000/success`,
-            cancel_url: `http://localhost:3000/checkout`,
+            cancel_url: `http://localhost:3000/cart`,
             customer: customer.id,
         };
         const session = await stripe.checkout.sessions.create(params);
@@ -264,13 +264,13 @@ app.use((err, req, res, next) => {
     if (err.name === "JsonWebTokenError") error = handleJWTError(error);
     if (err.name === "TokenExpiredError")
         error = handleExpirationalError(error);
-    res.status(error.statusCode).json({
-        status: error.status,
-        message: error.msg,
-    });
-    // res.status(500).json({
-    //     message: err.message,
+    // res.status(error.statusCode).json({
+    //     status: error.status,
+    //     message: error.msg,
     // });
+    res.status(500).json({
+        message: err.message,
+    });
 });
 
 mongoose

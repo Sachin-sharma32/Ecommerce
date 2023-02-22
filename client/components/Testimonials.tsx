@@ -22,7 +22,7 @@ const Testimonials = () => {
     const { data } = useGetAllTestimonials(onSuccess);
     return (
         <div className=" mt-10 flex flex-col items-center text-gray-500">
-            <h1 className=" text-lg mb-4">
+            <h1 className=" mb-4 text-4xl">
                 WE ALWAYS TRY TO MAKE OUT CUSTOMERS HAPPY
             </h1>
             <div className=" w-[100%] h-[100%]">
@@ -62,7 +62,7 @@ const Testimonials = () => {
                             key={story._id}
                             className="min-h-[70vh] w-[100%] bg-gray-100 mb-10 flex justify-center items-center conatiner text-sm"
                         >
-                            <div className=" bg-white flex items-center gap-20 p-10 overflow-hidden rounded-sm bg-opacity-90 w-[700px] max-w-[70%]">
+                            <div className=" bg-white flex items-center gap-20 p-10 overflow-hidden rounded-lg bg-opacity-90 w-[700px] max-w-[70%]">
                                 <div className=" rounded-full min-w-[150px] max-w-[150px] h-[150px] flex justify-center items-center overflow-hidden test__container relative">
                                     <img
                                         src={story.img}

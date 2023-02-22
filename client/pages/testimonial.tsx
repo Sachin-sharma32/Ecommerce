@@ -13,6 +13,8 @@ import { State } from "../utils/types";
 import { useCreateCategory } from "../hooks/useCategoy";
 import CloseIcon from "@mui/icons-material/Close";
 import { useCreateTestimonial } from "../hooks/useTestimonial";
+import Smooth from "../utils/smooth";
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
 
 const CreateCategory = () => {
     const [image, setImage] = useState();
@@ -89,17 +91,17 @@ const CreateCategory = () => {
         message: "",
     };
     return (
-        <div className="flex flex-col sm:flex-row min-h-screen gap-10 text-xs justify-center items-center mb-20 mx-auto bg-gradient-to-r from-gray-50 to-gray-100">
-            {success && (
+        <Smooth className="flex flex-col sm:flex-row min-h-screen gap-10 text-xs justify-center items-start pt-20 mb-20 mx-auto bg-gradient-to-r from-gray-50 to-gray-100">
+            {success && ( 
                 <SuccessModel>Thank You For Sharing Your Story</SuccessModel>
             )}
             {error && <ErrorModel>{err.response.data.message}</ErrorModel>}
-            <div className=" flex flex-col gap-10 w-[500px] items-center">
-                <div>
-                    <h2 className=" text-xl font-semibold text-center">
+            <div className=" flex flex-col gap-10 items-center">
+                <div className="flex flex-col gap-4">
+                    <h2 className=" text-4xl font-semibold text-center">
                         Your Story
                     </h2>
-                    <p className=" text-gray-500">
+                    <p className=" text-gray-500 text-md">
                         Help our business grow by sharing your experience
                         shopping with us.
                     </p>
@@ -122,7 +124,7 @@ const CreateCategory = () => {
                                         rows={5}
                                         minLength={10}
                                         type="text"
-                                        className=" bg-white outlinne-none p-2 resize-none rounded-sm focus:shadow-xl w-[500px] transition-all duration-500 border-b-4 border-transparent focus:border-gray-500 focus:invalid:border-red-500"
+                                        className=" outline-none bg-white outlinne-none p-2 resize-none rounded-lg focus:shadow-xl w-[500px] transition-all duration-500 border-b-4 border-transparent focus:border-gray-500 focus:invalid:border-red-500"
                                         placeholder="Story"
                                         name="message"
                                     />
@@ -132,33 +134,33 @@ const CreateCategory = () => {
                                     />
                                 </div>
                                 <button
-                                    className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-sm hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200"
+                                    className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-lg hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200"
                                     type="submit"
                                     disabled={!props.isValid}
                                 >
                                     PUBLISH
                                 </button>
-                            </Form> 
+                            </Form>
                         );
                     }}
                 </Formik>
             </div>
             <div
-                className={`flex gap-10 overflow-hidden relative  mt-10 flex-col min-h-[300px] min-w-[300px]`}
+                className="flex gap-10 overflow-hidden relative flex-col min-h-[300px] w-[300px]"
             >
                 <div className=" p-2 opacity-80 flex items-center gap-4 border-b border-green-500 w-fit">
                     <p>Share an Image</p>
-                    <EditIcon className=" cursor-pointer" />
+                    <CameraAltIcon className=" cursor-pointer" />
                     <div className=" absolute opacity-0 cursor-pointer">
                         <input type="file" onChange={imageHandler} />
                     </div>
                 </div>
-                <div className="grid grid-cols-3">
+                <div >
                     {image && (
-                        <div className="relative">
+                        <div className="relative  w-fit">
                             <img
                                 src={image}
-                                className="border-none w-[100px] h-[150px]"
+                                className="border-none w-[150px] h-[150px]"
                             />
                             <button onClick={removeImg}>
                                 <CloseIcon className=" absolute top-0 right-0 cursor-pointer text-sm" />
@@ -167,7 +169,7 @@ const CreateCategory = () => {
                     )}
                 </div>
             </div>
-        </div>
+        </Smooth>
     );
 };
 

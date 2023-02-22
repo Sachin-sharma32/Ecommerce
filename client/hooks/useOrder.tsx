@@ -19,7 +19,7 @@ export const useGetOrders = () => {
         },
         {
             onSuccess: (data) => {
-                dispatch(setOrders(data.data.data.docs));
+                // dispatch(setOrders(data.data.data.docs));
             },
             enabled: !!token,
         }

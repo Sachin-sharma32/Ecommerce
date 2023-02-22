@@ -11,7 +11,7 @@ const CategoryBar = () => {
     );
     const dispatch = useDispatch();
     return (
-        <div className=" mt-[4rem] flex justify-center gap-10 text-xl fixed top-0 left-0 z-40 w-full bg-white">
+        <div className=" mt-[4rem] flex justify-center gap-10 text-xl fixed top-0 left-0 mt-20 z-40 w-full bg-white">
             {categories &&
                 categories?.map((category, index) => (
                     <div

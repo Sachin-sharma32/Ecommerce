@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: Heebo;
+  src: url("../public/Heebo-VariableFont_wght.ttf");
+}
+
 html,
 body {
   padding: 0;
@@ -71,19 +76,20 @@ a {
 }
 .swiper-pagination-bullet{
   width: 15px !important;
-  height: 3px !important;
+  height: 8px !important;
   border-radius: 5px !important;
   margin-top: 10px !important;
 }
 .swiper-pagination-bullet-active {
   background-color: #000 !important;
+  width: 30px !important;
 }
 .swiper-button-next {
   background-image: url('../public/right.png');
   background-repeat: no-repeat;
   background-size: 50% auto;
   background-position: center;
-  background-color: white;
+  background-color: black;
   padding: 20px !important;
   opacity: 80%;
   position: absolute !important; 
@@ -104,7 +110,7 @@ a {
   background-repeat: no-repeat;
   background-size: 50% auto;
   background-position: center;
-  background-color: white;
+  background-color: black;
   padding: 20px !important;
   opacity: 80%;
   transform: translateY(-50px);
@@ -168,4 +174,8 @@ a {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.swiper-pagination{
+  position: absolute;
 }

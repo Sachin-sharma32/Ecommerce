@@ -19,7 +19,7 @@ const SignIn = () => {
     const dispatch = useDispatch();
 
     const user = useSelector((state: State) => state.auth.user);
-    const cart = useSelector((state: State) => state.auth.cart)(cart);
+    const cart = useSelector((state: State) => state.auth.cart)
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
 
@@ -233,7 +233,7 @@ const SignIn = () => {
                                     </div>
                                 </div>
                                 <button
-                                    className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-sm hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200 mt-4 w-60"
+                                    className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-lg hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200 mt-4 w-60"
                                     type="submit"
                                     disabled={!props.isValid}
                                 >

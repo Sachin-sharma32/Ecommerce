@@ -128,7 +128,7 @@ const SignInUser = () => {
                                 <input
                                     type="password"
                                     name="password"
-                                    className=" p-2 w-60 outline-none bg-white  rounded-sm focus:shadow-lg"
+                                    className=" p-2 w-60 outline-none bg-white  rounded-lg focus:shadow-lg"
                                     onChange={formik.handleChange}
                                     value={formik.values.password}
                                     onBlur={formik.handleBlur}
@@ -154,7 +154,7 @@ const SignInUser = () => {
                                 <input
                                     type="password"
                                     name="passwordConfirm"
-                                    className=" p-2 w-60 outline-none bg-white  rounded-sm focus:shadow-lg"
+                                    className=" p-2 w-60 outline-none bg-white  rounded-lg focus:shadow-lg"
                                     onChange={formik.handleChange}
                                     value={formik.values.passwordConfirm}
                                     onBlur={formik.handleBlur}
@@ -175,7 +175,7 @@ const SignInUser = () => {
                             </div>
                         </div>
                         <button
-                            className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-sm hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200 mt-4 w-60"
+                            className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-lg hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200 mt-4 w-60"
                             type="submit"
                             disabled={!formik.isValid}
                         >

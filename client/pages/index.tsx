@@ -12,7 +12,7 @@ import Practice from "../components/Practice";
 
 export default function Home() {
     return (
-        <Smooth className="min-h-screen home p-2">
+        <Smooth className="min-h-screen home ">
             <Head>
                 <title>Myntra - shop your dreams</title>
                 <link rel="icon" type="image/png" href="https://images.indianexpress.com/2021/01/myntra.png" />
@@ -26,7 +26,7 @@ export default function Home() {
                 <meta name="twitter:image" content="https://images.indianexpress.com/2021/01/myntra.png" />
             </Head>
             <ErrorBoundry>
-                <CategoryBar />
+                {/* <CategoryBar /> */}
             </ErrorBoundry>
             <ErrorBoundry>
                 <Header />

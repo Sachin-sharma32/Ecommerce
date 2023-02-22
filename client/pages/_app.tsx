@@ -15,34 +15,44 @@ import Script from "next/script";
 function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
     const queryClient = new QueryClient();
-    if (router.pathname === "/dashboard" || router.pathname === '/register' || router.pathname === '/signIn' || router.pathname === '/forgotPassword' || router.pathname.startsWith('/resetPasswrod')) {
+    if (
+        router.pathname === "/dashboard" ||
+        router.pathname === "/register" ||
+        router.pathname === "/signIn" ||
+        router.pathname === "/forgotPassword" ||
+        router.pathname.startsWith("/resetPasswrod")
+    ) {
         return (
-            <SessionProvider>
-                <QueryClientProvider client={queryClient}>
-                    <Provider store={store}>
-                        <div className=" text-gray-600 tracking-wide overflow-hidden">
-                            <Navbar />
-                            <Component {...pageProps}/>
-                        </div>
-                    </Provider>
-                    <ReactQueryDevtools />
-                </QueryClientProvider>
-            </SessionProvider>
+            <div className=" font-heebo font-[500]">
+                <SessionProvider>
+                    <QueryClientProvider client={queryClient}>
+                        <Provider store={store}>
+                            <div className=" text-black tracking-wide overflow-hidden">
+                                <Navbar />
+                                <Component {...pageProps} />
+                            </div>
+                        </Provider>
+                        <ReactQueryDevtools />
+                    </QueryClientProvider>
+                </SessionProvider>
+            </div>
         );
     } else {
         return (
-            <SessionProvider>
-                <QueryClientProvider client={queryClient}>
-                    <Provider store={store}>
-                        <div className=" text-gray-600 tracking-wide overflow-hidden">
-                            <Navbar />
-                            <Component {...pageProps} />
-                            <Footer />
-                        </div>
-                    </Provider>
-                    <ReactQueryDevtools />
-                </QueryClientProvider>
-            </SessionProvider>
+            <div className=" font-heebo font-[500]">
+                <SessionProvider>
+                    <QueryClientProvider client={queryClient}>
+                        <Provider store={store}>
+                            <div className=" text-black tracking-wide overflow-hidden">
+                                <Navbar />
+                                <Component {...pageProps} />
+                                <Footer />
+                            </div>
+                        </Provider>
+                        <ReactQueryDevtools />
+                    </QueryClientProvider>
+                </SessionProvider>
+            </div>
         );
     }
 }

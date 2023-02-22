@@ -48,7 +48,8 @@ exports.getMe = catchAsync(async (req, res) => {
     if (!token) {
         res.status(500).json({ message: "authorization token not provided" });
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, "sachin1234")
     const user = await User.findOne({ _id: decoded.id });
     res.status(200).json({
         status: "success",

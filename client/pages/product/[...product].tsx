@@ -250,7 +250,7 @@ const Product = ({ productId }) => {
                                             <img
                                                 src={item}
                                                 alt=""
-                                                className="w-[100%] h-[100%] cursor-pointer"
+                                                className="w-[100%] h-[100%] cursor-pointer rounded-lg"
                                                 onClick={() => setSelect(index)}
                                             />
                                         </SwiperSlide>
@@ -260,7 +260,7 @@ const Product = ({ productId }) => {
                             <div className="flex items-center justify-center w-[70%]">
                                 <img
                                     src={product.img[select]}
-                                    className=" w-[100%] h-[100%]"
+                                    className=" w-[100%] h-[100%] rounded-lg"
                                     alt="img"
                                 />
                             </div>
@@ -330,7 +330,7 @@ const Product = ({ productId }) => {
                                     >
                                         <RemoveIcon className=" cursor-pointer" />
                                     </div>
-                                    <p className=" border px-2 rounded-sm">
+                                    <p className=" border px-2 rounded-lg">
                                         {quantity}
                                     </p>
                                     <div
@@ -495,7 +495,7 @@ const Product = ({ productId }) => {
                                     </div>
                                 </div>
                             ) : (
-                                <div className=" w-fit p-2 bg-gray-200 text-gray-500">
+                                <div className=" w-fit p-2 bg-gray-200 text-gray-500 rounded-lg">
                                     No Reviews Yet
                                 </div>
                             )}

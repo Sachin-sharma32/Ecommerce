@@ -11,7 +11,7 @@ import Link from "next/link";
 
 const Footer = () => {
     return (
-        <div className=" p-10 grid grid-cols-1 gap-8 justify-items-center pb-10 text-xs items-center sm:grid-cols-2 md:grid-cols-3 bg-gray-100">
+        <div className=" p-10 grid grid-cols-1 gap-8 justify-items-center pb-10 text-xs items-center sm:grid-cols-2 md:grid-cols-3 bg-black text-white">
             <div className=" flex flex-col gap-2 p-4 h-full border200 text-center items-center">
                 <Link href="/" className=" text-xl font-semibold">
                     MYNTRA

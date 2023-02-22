@@ -74,12 +74,12 @@ const DashBoard = () => {
     };
 
     return (
-        <Smooth className=" flex justify-center text-sm min-h-screen overflow-x-hidden px-10">
+        <Smooth className=" flex justify-center text-sm min-h-screen mt-10 overflow-x-hidden px-10">
             <div>
                 <button className=' cursor-pointer bg-black flex md:hidden' onClick={showSideBar}>
                     <MenuIcon className=" mt-[4rem] absolute top-2 left-2" />
                 </button>
-                <div ref={sideRef} className="transition-all duration-200 absolute top-0 left-0 min-h-screen mt-[4rem] w-[200px] -translate-x-[200px] p-4 flex flex-col gap-4 bg-white text-gray-500 shadow-xl z-50">
+                <div ref={sideRef} className="transition-all duration-200 absolute top-0 left-0 min-h-screen w-[200px] -translate-x-[200px] p-4 flex flex-col gap-4 bg-white text-gray-500 shadow-xl z-50">
                     {user?.isAdmin &&
                         links.map((link, index) => (
                             <div
@@ -115,7 +115,7 @@ const DashBoard = () => {
                     </button>
                 </div>
             </div>
-            <div className=" mt-[6rem] min-h-screen flex justify-center w-[100vw]">
+            <div className=" min-h-screen flex justify-center w-[100vw]">
                 <Head>
                     <title>Myntra - dashBoard</title>
                     <meta

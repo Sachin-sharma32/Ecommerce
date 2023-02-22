@@ -106,7 +106,7 @@ const CreateCollection = ({ productId }) => {
             ...values,
         };
         if (values) {
-          console.log(rating)
+            console.log(rating);
             createRating(rating);
         } else {
             setEr(true);
@@ -162,7 +162,7 @@ const CreateCollection = ({ productId }) => {
                                     <div className=" w-full">
                                         <Field
                                             type="text"
-                                            className="w-full bg-white border-b  rounded-sm px-4 py-2 outline-none"
+                                            className="w-full bg-white border-b  rounded-lg px-4 py-2 outline-none"
                                             placeholder="message"
                                             name="message"
                                         />
@@ -180,7 +180,7 @@ const CreateCollection = ({ productId }) => {
                                         }}
                                     />
                                     <button
-                                        className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-sm hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200"
+                                        className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-lg hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200"
                                         type="submit"
                                         disabled={!props.isValid}
                                     >

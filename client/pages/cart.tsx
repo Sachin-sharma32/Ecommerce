@@ -81,12 +81,12 @@ const Cart = () => {
     };
 
     const submitHandler = async () => {
+        console.log(cart)
         if (token) {
             const response = await axios.post(
                 "http://localhost:8000/api/payment",
                 cart
             );
-            response;
             if (response.statusText === "OK") {
                 window.location.href = response.data.url;
             }
@@ -96,7 +96,7 @@ const Cart = () => {
     };
 
     return (
-        <Smooth className=" min-h-screen mt-[6rem] px-10 text-sm mb-20">
+        <Smooth className=" min-h-screen mt-10 px-10 text-sm mb-20">
             {success && <SuccessModel>added to cart</SuccessModel>}
             {removed && <SuccessModel>removed from cart</SuccessModel>}
             <Head>
@@ -114,17 +114,17 @@ const Cart = () => {
             <h1 className=" w-fit m-auto text-2xl font-semibold sticky">
                 YOUR CART
             </h1>
-            <div className="flex justify-between mt-10">
+            <div className="flex justify-between mt-10 rounded-lg">
                 <Link
                     href="/"
-                    className=" border border-black hover:border-white rounded-sm flex justify-center items-center px-2 hover:bg-black hover:text-white transition-all duration-200"
+                    className=" border border-black hover:border-white rounded-lg flex justify-center items-center px-2 hover:bg-black hover:text-white transition-all duration-200"
                 >
                     CONTINUE SHOPPING
                 </Link>
                 {cart?.products?.length > 0 && (
                     <button
                         onClick={submitHandler}
-                        className=" border bg-black text-white border-white hover:border-black rounded-sm flex justify-center items-center px-4 py-1 hover:bg-white hover:text-black transition-all duration-200"
+                        className=" rounded-lg border bg-black text-white border-white hover:border-black flex justify-center items-center px-4 py-1 hover:bg-white hover:text-black transition-all duration-200"
                     >
                         CHECKOUT NOW
                     </button>
@@ -141,13 +141,13 @@ const Cart = () => {
                             cart.products.map((item: ProductWithQuantity) => (
                                 <div
                                     key={item._id}
-                                    className="border flex flex-col justify-center items-center"
+                                    className="border flex flex-col justify-center items-center rounded-lg"
                                 >
                                     <div className="flex gap-10 p-2  justify-between items-center w-full">
                                         <div>
                                             <img
                                                 src={item.product.img[0]}
-                                                className=" w-[100px] h-[100px]"
+                                                className=" w-[100px] h-[100px] rounded-lg"
                                                 alt="img"
                                             />
                                         </div>
@@ -163,7 +163,7 @@ const Cart = () => {
                                                 <select
                                                     name="color"
                                                     id=""
-                                                    className=" bg-white border p-1 text-center outline-non"
+                                                    className=" bg-white border p-1 text-center outline-non rounded-lg outline-none"
                                                     onChange={(e) =>
                                                         addProductToCart({
                                                             itemId: item._id,
@@ -193,7 +193,7 @@ const Cart = () => {
                                                 <select
                                                     name="size"
                                                     id=""
-                                                    className=" bg-white border p-1 text-center outline-non"
+                                                    className=" bg-white border p-1 text-center outline-none rounded-lg"
                                                     onChange={(e) =>
                                                         addProductToCart({
                                                             itemId: item._id,
@@ -233,7 +233,7 @@ const Cart = () => {
                                                 >
                                                     <RemoveIcon className=" cursor-pointer" />
                                                 </button>
-                                                <p className=" border px-2 border-blue-500 rounded-sm">
+                                                <p className=" border px-2 border-blue-500 rounded-lg">
                                                     {item.quantity}
                                                 </p>
                                                 <button
@@ -255,7 +255,7 @@ const Cart = () => {
                                     </div>
                                     <div className="w-full flex justify-evenly border-t">
                                         <button
-                                            className=" uppercase w-full border-r hover:bg-gray-500 hover:text-white transition-all duration-200"
+                                            className=" uppercase w-full border-r hover:bg-black hover:text-white transition-all duration-200 rounded-lg"
                                             onClick={() => {
                                                 removeProductFromCart(
                                                     item.product._id,
@@ -266,7 +266,7 @@ const Cart = () => {
                                             Remove
                                         </button>
                                         <button
-                                            className=" uppercase w-full hover:bg-gray-500 hover:text-white transition-all duration-200"
+                                            className=" uppercase w-full hover:bg-black hover:text-white transition-all duration-200 rounded-lg"
                                             onClick={() => {
                                                 addPrudoctToWishList(
                                                     item.product._id,
@@ -287,11 +287,11 @@ const Cart = () => {
                     </ErrorBoundry>
                 </div>
                 {cart?.products.length > 0 && (
-                    <div className=" border w-fit p-4 flex flex-col gap-4 justify-center text-left rounded-sm h-fit sticky top-20">
+                    <div className=" border w-fit p-4 flex flex-col gap-4 justify-center text-left rounded-lg h-fit sticky top-20">
                         <h2 className=" text-xl font-semibold text-center">
                             ORDER SUMMARY
                         </h2>
-                        <table className="border border-collapse">
+                        <table className="border border-collapse rounded-lg">
                             <tr className=" bg-gray-100">
                                 <td className=" border w-32 p-2 text-left">
                                     Name
@@ -339,7 +339,7 @@ const Cart = () => {
                         </table>
                         <button
                             onClick={submitHandler}
-                            className=" border bg-black text-white border-white hover:border-black rounded-sm flex justify-center items-center px-4 py-1 hover:bg-white hover:text-black transition-all duration-200"
+                            className=" border bg-black text-white border-white hover:border-black rounded-lg flex justify-center items-center px-4 py-1 hover:bg-white hover:text-black transition-all duration-200"
                         >
                             CHECKOUT NOW
                         </button>
