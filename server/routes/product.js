@@ -19,10 +19,10 @@ router
     .route("/:id")
     .patch(verifyAdmin, updateProduct)
     .delete(verifyAdmin, deleteProduct)
-    .get(verifyToken, getProduct);
+    .get(getProduct);
 router
     .route("/")
-    .get(verifyToken, getAllProducts)
+    .get(getAllProducts)
     .post(verifyAdmin, createProduct);
 
 module.exports = router;

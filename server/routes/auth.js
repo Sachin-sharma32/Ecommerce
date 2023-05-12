@@ -1,16 +1,18 @@
 const express = require("express");
 const {
-    createUser,
-    logIn,
-    logOut,
-    refresh,
-    forgetPassword,
-    resetPassword,
+  createUser,
+  logIn,
+  logOut,
+  refresh,
+  forgetPassword,
+  resetPassword,
+  verifyEmail,
 } = require("../controllers/authController");
 
 const router = express.Router();
 
-router.route("/register").post(createUser);
+router.route("/register").get(createUser);
+router.route("/verifyEmail").post(verifyEmail);
 router.route("/login").post(logIn);
 router.route("/logout").post(logOut);
 router.route("/refresh").get(refresh);
