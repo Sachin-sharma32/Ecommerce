@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
-    "start": "nodemon index.js --prefix server",
+    "start": "node index.js",
     "client": "npm run dev --prefix client",
     "dev": "concurrently \"npm start\" \"npm run client\" "
   },

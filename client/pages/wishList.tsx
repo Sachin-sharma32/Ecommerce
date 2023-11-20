@@ -12,9 +12,8 @@ import SuccessModel from "../utils/successModel";
 import MessageModel from "../utils/messageModel";
 import { useAddToWishList, useRemoveFromWishList } from "../hooks/useWishList";
 import ProductListCard from "../components/ProductListCard";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import { useAddToCart } from "../hooks/useCart";
-
 
 const WishList = () => {
   const dispatch = useDispatch();
@@ -50,8 +49,6 @@ const WishList = () => {
   const addProductToCart = (productObject) => {
     addToCart(productObject);
   };
-
-
 
   return (
     <Smooth className=" min-h-screen mt-[6rem] px-10 text-sm mb-20">
@@ -89,22 +86,50 @@ const WishList = () => {
             )}
             {wishList &&
               wishList.products.map((item: ProductWithQuantity) => (
-                <div key={item._id} className=' w-[200px] flex flex-col gap-3 relative'>
+                <div
+                  key={item._id}
+                  className=" w-[200px] flex flex-col gap-3 relative"
+                >
                   <ProductListCard product={item.product} />
-                  <button onClick={() => {
-                    addProductToCart({ productId: item.product._id, quantity: 1, color: item.color, size: item.size })
-                    removeProductFromWishList(item.product._id)
-                  }} className=" uppercase w-full hover:bg-gray-500 hover:text-white transition-all duration-200 border">move to wistlist</button>
-                  <button onClick={() => removeProductFromWishList(item.product._id)}>
+                  <button
+                    onClick={() => {
+                      addProductToCart({
+                        productId: item.product._id,
+                        quantity: 1,
+                        color: item.color,
+                        size: item.size,
+                      });
+                      removeProductFromWishList(item.product._id);
+                    }}
+                    className=" uppercase w-full hover:bg-gray-500 hover:text-white transition-all duration-200 border"
+                  >
+                    Move to Cart
+                  </button>
+                  <button
+                    onClick={() => removeProductFromWishList(item.product._id)}
+                  >
                     <CloseIcon className=" absolute top-0 right-0 cursor-pointer text-xl z-50 text-white" />
                   </button>
                 </div>
               ))}
           </div>
         </ErrorBoundry>
-      </div >
-    </Smooth >
+      </div>
+    </Smooth>
   );
 };
 
 export default WishList;
+
+WishList.getInitialProps = async () => {
+  return {
+    title: "Wishlist",
+    image: "/shremz.png",
+    summery:
+      "Elevate your wardrobe with our fashion-forward collections. Discover the perfect blend of trends and timeless classics. Unleash your inner fashionista and shop with confidence. Experience effortless style delivered right to your doorstep. Embrace the essence of chic and define your own fashion narrative with Shremz.",
+    keywords: "shremz e-commerce bag women-bag purse shoes clothing store",
+    type: "website",
+    imageAlt: "Shremz Logo",
+    parameter: "wishList",
+  };
+};

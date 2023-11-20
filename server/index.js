@@ -17,7 +17,6 @@ const cookieParser = require("cookie-parser");
 const cartRouter = require("./routes/cart");
 const statRouter = require("./routes/stat");
 const categoryRouter = require("./routes/category");
-const collectionRouter = require("./routes/collection");
 const ratingRouter = require("./routes/rating");
 const wishListRouter = require("./routes/wishList");
 const Cart = require("./models/cart");
@@ -26,11 +25,18 @@ const Order = require("./models/order");
 const bodyParser = require("body-parser");
 const testimonialRouter = require("./routes/testimonial");
 
-const stripe = require("stripe")(
-  "sk_test_51LdwmjSDTojZ29pJy3CjBf76FitpzXXlIpvb3BCeXR9tIjRd1pIsk2pJHXPEiNxCnhrOm6UjUQtkAeoTxSFR4ZKb003xyfWtu6"
-);
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 const app = express();
+
+//? 7
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
 
 //? 2
 //* parse (read) incomming cookie
@@ -38,13 +44,13 @@ app.use(cookieParser());
 
 app.use(compression());
 
-const limiter = rateLimit({
-  max: 1000,
-  windowMs: 60 * 60 * 1000,
-  message: "Can only make 100 requests to server in 1 hour",
-});
+// const limiter = rateLimit({
+//   max: 1000,
+//   windowMs: 60 * 60 * 1000,
+//   message: "Can only make 100 requests to server in 1 hour",
+// });
 
-app.use("/api", limiter);
+// app.use("/api", limiter);
 app.use(helmet.crossOriginOpenerPolicy());
 app.use(sanitize());
 app.use(hpp());
@@ -65,8 +71,7 @@ app.post(
     const payload = req.body;
 
     const signature = req.headers["stripe-signature"];
-    const endpointSecret =
-      "whsec_a2c8949d7163595d2a45f2b8d662f610ff85037f67d0b82db5c3f96d42a24fb7";
+    const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
     let event;
     try {
       event = stripe.webhooks.constructEvent(
@@ -107,24 +112,12 @@ app.use(
   })
 );
 
-//? 7
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-    optionsSuccessStatus: 200,
-  })
-);
-// app.use(cors());
-// app.options("*", cors());
-
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/orders", orderRouter);
 app.use("/api/v1/carts", cartRouter);
 app.use("/api/v1/categories", categoryRouter);
-app.use("/api/v1/collections", collectionRouter);
 app.use("/api/v1/ratings", ratingRouter);
 app.use("/api/v1/wishLists", wishListRouter);
 app.use("/api/v1/stats", statRouter);
@@ -210,8 +203,8 @@ app.post("/api/payment", async (req, res) => {
           quantity: item.quantity,
         };
       }),
-      success_url: `http://localhost:3000/success`,
-      cancel_url: `http://localhost:3000/checkout`,
+      success_url: `${process.env.WEBSITE_URL}/success`,
+      cancel_url: `${process.env.WEBSITE_URL}/checkout`,
       customer: customer.id,
     };
     const session = await stripe.checkout.sessions.create(params);
@@ -272,13 +265,9 @@ app.use((err, req, res, next) => {
   });
 });
 
-mongoose
-  .connect(
-    "mongodb+srv://sachin:sachin1234@cluster0.rum0d3d.mongodb.net/?retryWrites=true&w=majority"
-  )
-  .then((connection) => {
-    console.log("connected to db");
-  });
+mongoose.connect(process.env.DB).then((connection) => {
+  console.log("connected to db");
+});
 
 app.listen(8000, () => {
   console.log("server is up and running");

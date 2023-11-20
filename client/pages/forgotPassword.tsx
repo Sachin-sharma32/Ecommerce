@@ -11,73 +11,71 @@ import { signIn, useSession } from "next-auth/react";
 import { State } from "../utils/types";
 import Smooth from "../utils/smooth";
 import { useFormik } from "formik";
-import * as yup from 'yup'
+import * as yup from "yup";
 import SuccessModel from "../utils/successModel";
 import Head from "next/head";
-import EastIcon from '@mui/icons-material/East';
+import EastIcon from "@mui/icons-material/East";
 import axios from "axios";
-
 
 const SignInUser = () => {
   const dispatch = useDispatch();
 
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState(false);
 
   const { data: session } = useSession();
 
-
   const submitHandler = async (values) => {
-    const response = await axios.post('http://localhost:8000/api/v1/auth/forgotPassword', values)
-    if (response.statusText === 'OK') {
-      setSuccess(true)
+    const response = await axios.post(
+      "http://localhost:8000/api/v1/auth/forgotPassword",
+      values
+    );
+    if (response.statusText === "OK") {
+      setSuccess(true);
       setTimeout(() => {
-        setSuccess(false)
-      }, 2000)
+        setSuccess(false);
+      }, 2000);
     }
   };
 
   const validationObject = yup.object({
     email: yup.string().email("please provide a valid email").required(),
-  })
+  });
 
   const formik = useFormik({
     initialValues: { email: "" },
     onSubmit: submitHandler,
     validateOnBlur: true,
-    validationSchema: validationObject
-  })
-
+    validationSchema: validationObject,
+  });
 
   return (
-    <Smooth className=" min-h-screen flex justify-center items-center bg-gradient-to-r from-gray-100 to-gray-200 text-gray-500 text-xs">
+    <Smooth className=" min-h-screen flex justify-center items-center bg-gradient-to-r from-gray-100 to-gray-200 text-black text-normal">
       <Head>
         <title>Myntra - logIn</title>
-        <link rel="icon" type="image/png" href="https://images.indianexpress.com/2021/01/myntra.png" />
+        <link
+          rel="icon"
+          type="image/png"
+          href="https://images.indianexpress.com/2021/01/myntra.png"
+        />
         <meta
           name="description"
           content="The only online store you will need to fulfill all your needs"
         />
       </Head>
-      {success &&
-        <SuccessModel>A Password Reset link has being sent to your email</SuccessModel>
-      }
-       <div className="mt-[4rem] grid grid-cols-1 lg:grid-cols-2 form__background  h-fit shadow-2xl justify-items-center min-w-[70vw] max-w-[90%]">
+      {success && (
+        <SuccessModel>
+          A Password Reset link has being sent to your email
+        </SuccessModel>
+      )}
+      <div className="mt-[4rem] grid grid-cols-1 lg:grid-cols-2 form__background  h-fit shadow-2xl justify-items-center min-w-[70vw] max-w-[90%]">
         <div className=" w-fit p-10 text-center flex flex-col gap-4">
           <div className=" text-center m-auto w-fit flex flex-col items-center">
-            <img
-              src="/myntra.png"
-              width={100}
-              height={100}
-              alt="img"
-            />
-            <h2 className=" text-lg font-semibold text-gray-800">
+            <img src="/myntra.png" width={100} height={100} alt="img" />
+            <h2 className=" text-lg font-semibold text-black">
               FORGOT PASSWORD
             </h2>
           </div>
-          <form
-            className=" items-center"
-            onSubmit={formik.handleSubmit}
-          >
+          <form className=" items-center" onSubmit={formik.handleSubmit}>
             <div className=" grid grid-cols-1 gap-6 gap-y-2">
               <div className=" flex flex-col items-start ">
                 <label htmlFor="email" className=" text-md">
@@ -92,7 +90,11 @@ const SignInUser = () => {
                   onBlur={formik.handleBlur}
                   required
                 />
-                <Error className={formik.errors.email ? "opacity-100" : 'opacity-0'}>{formik.errors.email ? formik.errors.email : ""}</Error>
+                <Error
+                  className={formik.errors.email ? "opacity-100" : "opacity-0"}
+                >
+                  {formik.errors.email ? formik.errors.email : ""}
+                </Error>
               </div>
             </div>
             <button
@@ -106,7 +108,19 @@ const SignInUser = () => {
         </div>
       </div>
     </Smooth>
-
   );
-}
+};
 export default SignInUser;
+
+SignInUser.getInitialProps = async () => {
+  return {
+    title: "Forgot Password",
+    image: "/shremz.png",
+    summery:
+      "Elevate your wardrobe with our fashion-forward collections. Discover the perfect blend of trends and timeless classics. Unleash your inner fashionista and shop with confidence. Experience effortless style delivered right to your doorstep. Embrace the essence of chic and define your own fashion narrative with Shremz.",
+    keywords: "shremz e-commerce bag women-bag purse shoes clothing store",
+    type: "website",
+    imageAlt: "Shremz",
+    parameter: "forgotPassword",
+  };
+};

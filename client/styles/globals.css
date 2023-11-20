@@ -2,14 +2,81 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Heebo";
+  src: url("../public/font/Heebo-VariableFont_wght.ttf");
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../public/font/Poppins-Light.ttf");
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../public/font/RobotoCondensed-Regular.ttf");
+}
+@font-face {
+  font-family: "Tungsten";
+  src: url("../public/font/Tungsten-Bold.ttf");
+}
+@font-face {
+  font-family: "Monument-bold";
+  src: url("../public/font/MonumentExtended-Ultrabold.otf");
+}
+@font-face {
+  font-family: "Monument-regular";
+  src: url("../public/font/MonumentExtended-Regular.otf");
+}
+@font-face {
+  font-family: "Gilroy-2";
+  src: url("../public/font/Gilroy-Thin.ttf");
+}
+@font-face {
+  font-family: "Gilroy-1";
+  src: url("../public/font/Gilroy-UltraLight.ttf");
+}
+@font-face {
+  font-family: "Gilroy-3";
+  src: url("../public/font/Gilroy-SemiBold.ttf");
+}
+@font-face {
+  font-family: "Gilroy-4";
+  src: url("../public/font/Gilroy-Regular.ttf");
+}
+@font-face {
+  font-family: "Gilroy-5";
+  src: url("../public/font/Gilroy-Medium.ttf");
+}
+@font-face {
+  font-family: "Gilroy-6";
+  src: url("../public/font/Gilroy-Light.ttf");
+}
+@font-face {
+  font-family: "Gilroy-7";
+  src: url("../public/font/Gilroy-Heavy.ttf");
+}
+@font-face {
+  font-family: "Gilroy-8";
+  src: url("../public/font/Gilroy-ExtraBold.ttf");
+}
+@font-face {
+  font-family: "Gilroy-9";
+  src: url("../public/font/Gilroy-Black.ttf");
+}
+@font-face {
+  font-family: "Satoshi";
+  src: url("../public/Satoshi-Regular.otf");
+}
+.arrow-container:hover .arrow {
+  transform: translateX(0) scale(1.5);
+}
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: "Lato", sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 1.7;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.7;
 }
 
 a {
@@ -31,45 +98,56 @@ a {
   }
 }
 
-.product-card:hover .product-icons{
+.product-card:hover .product-icons {
   opacity: 1;
 }
 
-.btn{
+.btn {
   color: white;
 }
 
-
-.form__background{
-  background-image: linear-gradient(105deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.9) 50%, transparent 50%),url(../public/form-bg.jpg);
+.form__background {
+  background-image: linear-gradient(
+      105deg,
+      rgba(255, 255, 255, 0.7) 0%,
+      rgba(255, 255, 255, 0.9) 50%,
+      transparent 50%
+    ),
+    url(../public/form-bg.jpg);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
-.checkout__background{
-  background-image: linear-gradient(105deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0.7) 100%),url(../public/form-bg.jpg);
+.checkout__background {
+  background-image: url(https://fabricofsociety.luxury/cdn/shop/files/MR1527JM_FABRIC_OF_SOCIETY_SHOT4_034_1024x354_d6f09e19-ba0d-4e0d-933e-45c3c336436f_1024x.jpg?v=1664281918);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 @media only screen and (max-width: 1024px) {
-  .form__background{
-    background-image: linear-gradient(90deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,1) 100%),url(../public/form-bg.jpg);
+  .form__background {
+    background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.7) 0%,
+        rgba(255, 255, 255, 0.9) 50%,
+        rgba(255, 255, 255, 1) 100%
+      ),
+      url(../public/form-bg.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
 }
-.user-links{
+.user-links {
   visibility: hidden;
 }
-.user-icon:hover .user-links{
+.user-icon:hover .user-links {
   visibility: visible;
 }
-.scrollbar::-webkit-scrollbar{
+.scrollbar::-webkit-scrollbar {
   width: 0;
 }
-.swiper-pagination-bullet{
+.swiper-pagination-bullet {
   width: 15px !important;
   height: 3px !important;
   border-radius: 5px !important;
@@ -79,28 +157,28 @@ a {
   background-color: #000 !important;
 }
 .swiper-button-next {
-  background-image: url('../public/right.png');
+  background-image: url("../public/right.png");
   background-repeat: no-repeat;
   background-size: 50% auto;
   background-position: center;
   background-color: white;
   padding: 20px !important;
   opacity: 80%;
-  position: absolute !important; 
+  position: absolute !important;
   transform: translateY(-50px);
 }
-.swiper-button-next:hover{
-  transition: all .5s;
+.swiper-button-next:hover {
+  transition: all 0.5s;
   border-radius: 100%;
 }
-.swiper-button-next::after{
+.swiper-button-next::after {
   display: none;
 }
 .swiper-button-next::after {
   display: none;
 }
 .swiper-button-prev {
-  background-image: url('../public/left.png');
+  background-image: url("../public/left.png");
   background-repeat: no-repeat;
   background-size: 50% auto;
   background-position: center;
@@ -109,62 +187,64 @@ a {
   opacity: 80%;
   transform: translateY(-50px);
 }
-.swiper-button-prev:hover{
-  transition: all .5s;
+.swiper-button-prev:hover {
+  transition: all 0.5s;
   border-radius: 100%;
 }
-.swiper-button-prev::after{
+.swiper-button-prev::after {
   display: none;
 }
 .swiper-button-prev::after {
   display: none;
 }
-.grid__container{
+.grid__container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   justify-items: center;
   -moz-column-gap: 100px;
-       column-gap: 100px;
+  column-gap: 100px;
 }
-.grid-area-container{
+.grid-area-container {
   display: grid;
-  grid-template-areas: "images details"
-                       "relatedProducts details"
+  grid-template-areas:
+    "images details"
+    "relatedProducts details";
 }
 @media only screen and (max-width: 600px) {
-  .grid-area-container{
+  .grid-area-container {
     display: grid;
-    grid-template-areas: "images images"
-                         "details details"
-                         "relatedProducts relatedProducts"
+    grid-template-areas:
+      "images images"
+      "details details"
+      "relatedProducts relatedProducts";
   }
 }
-.images{
+.images {
   grid-area: images;
 }
-.details{
+.details {
   grid-area: details;
 }
-.relatedProducts{
+.relatedProducts {
   grid-area: relatedProducts;
 }
-.orderDetails{
+.orderDetails {
   visibility: hidden;
 }
-.orderProduct:hover .orderDetails{
+.orderProduct:hover .orderDetails {
   visibility: visible;
 }
-.text_field{
+.text_field {
   color: green;
   border: 2px solid black !important;
   outline: none;
 }
-.test__container:hover .test__text{
- transform: translateY(0);
+.test__container:hover .test__text {
+  transform: translateY(0);
 }
 
-.conatiner{
-  background-image: url(../public/form-bg.jpg);
+.conatiner {
+  background-image: url(https://fabricofsociety.luxury/cdn/shop/files/MR1527JM_FABRIC_OF_SOCIETY_SHOT4_034_1024x354_d6f09e19-ba0d-4e0d-933e-45c3c336436f_1024x.jpg?v=1664281918);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: cemter;

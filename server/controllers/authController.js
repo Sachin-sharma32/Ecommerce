@@ -48,7 +48,7 @@ exports.createUser = catchAsync(async (req, res) => {
   });
   await Cart.create({ userId: newUser._id, products: [] });
   await WishList.create({ userId: newUser._id, products: [] });
-  res.redirect("http://localhost:3000/signIn");
+  res.redirect("https://yasa.vercel.app/signIn");
   res.end();
 });
 
@@ -121,7 +121,7 @@ exports.refresh = catchAsync(async (req, res, next) => {
   if (!cookies.jwt) return next(new AppError("unauthorised", 401));
   const refreshToken = cookies.jwt;
   //* verify token
-  const decoded = jwt.verify(refreshToken, "sachin1234");
+  const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
   const foundUser = await User.findOne({ _id: decoded.id });
   if (!foundUser) return next(new AppError("unauthorised", 401));
   //* new access token
@@ -137,7 +137,7 @@ exports.verifyToken = (req, res, next) => {
   const { authorization } = req.headers;
   if (authorization) {
     const authToken = authorization.split(" ")[1];
-    jwt.verify(authToken, "sachin1234", (err, user) => {
+    jwt.verify(authToken, process.env.JWT_SECRET, (err, user) => {
       if (err) {
         return next(new AppError("incorrect jwt", 401));
       } else {

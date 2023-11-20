@@ -1,4 +1,3 @@
-
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
@@ -7,30 +6,28 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { useCreateProduct } from "../hooks/useProduct";
 import { Formik, FieldArray, Field, Form, ErrorMessage } from "formik";
-import * as yup from 'yup'
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
+import * as yup from "yup";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import Error from "../utils/error";
 import SuccessModel from "../utils/successModel";
 import ErrorModel from "../utils/errorModel";
 import { State } from "../utils/types";
 import { useCreateCategory } from "../hooks/useCategoy";
 import { useCreateCollection } from "../hooks/useCollection";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 
-
 const CreateCollection = () => {
+  const [images, setImages] = useState([]);
 
-  const [images, setImages] = useState([])
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
-  const [success, setSuccess] = useState(false)
-  const [error, setError] = useState(false)
+  const categories = useSelector((state) => state.auth.categories);
 
-  const categories = useSelector((state) => state.auth.categories)
-
-  const user = useSelector((state: State) => state.auth.user)
+  const user = useSelector((state: State) => state.auth.user);
 
   //? (f)
   const imageHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,139 +47,171 @@ const CreateCollection = () => {
         formData,
         config
       );
-      setImages([...images, response.data])
+      setImages([...images, response.data]);
     } catch (err) {
-      (err)
+      err;
     }
   };
 
   const onSuccess = () => {
-    setSuccess(true)
+    setSuccess(true);
     setTimeout(() => {
-      setSuccess(false)
-    }, 2000)
-  }
-
+      setSuccess(false);
+    }, 2000);
+  };
 
   const onError = () => {
-    setError(true)
+    setError(true);
     setTimeout(() => {
-      setError(false)
-    }, 2000)
-  }
+      setError(false);
+    }, 2000);
+  };
 
-  const { mutate: createCollection, error: err } = useCreateCollection(onSuccess, onError);
+  const { mutate: createCollection, error: err } = useCreateCollection(
+    onSuccess,
+    onError
+  );
 
   const submitHandler = async (values) => {
     const collection = {
       img: images,
-      ...values
+      ...values,
     };
     createCollection(collection);
   };
 
   const removeImg = (index) => {
     const filter = images.filter((img, i) => {
-      return i !== index
-    })
-    setImages(filter)
-  }
+      return i !== index;
+    });
+    setImages(filter);
+  };
 
   const validationObject = yup.object({
-    title: yup.string().min(3, "title should atleast 3 characters long").required("title is required"),
-    desc: yup.string().min(20, "description should be atleast 20 characters long").required("desc is required"),
-    category: yup.string().required("category is required")
-  })
+    title: yup
+      .string()
+      .min(3, "title should atleast 3 characters long")
+      .required("title is required"),
+    desc: yup
+      .string()
+      .min(20, "description should be atleast 20 characters long")
+      .required("desc is required"),
+    category: yup.string().required("category is required"),
+  });
 
   const initialValues = {
-    title: '', desc: '', category: ''
-  }
+    title: "",
+    desc: "",
+    category: "",
+  };
   return (
-    <div className="flex flex-col sm:flex-row min-h-screen gap-10 text-xs max-w-[1200px] w-fit items-center sm:items-start mb-10 ">
+    <div className="flex flex-col sm:flex-row min-h-screen gap-10 text-normal max-w-[1200px] w-fit items-center sm:items-start mb-10 ">
       {success && <SuccessModel>collection created successfully</SuccessModel>}
       {error && <ErrorModel>{err.response.data.message}</ErrorModel>}
       <div className=" flex flex-col gap-10">
-        <h2 className=" text-xl font-semibold text-center">Create Collection</h2>
+        <h2 className=" text-xl font-semibold text-center">
+          Create Collection
+        </h2>
         <Formik
           initialValues={initialValues}
           onSubmit={submitHandler}
-
           //* by default
           validateOnBlur={true}
           validateOnChange={true}
-
-          validationSchema={validationObject}>
-          {
-            (props) => {
-              (props)
-              return (
-                <Form
-                  className=" flex flex-col justify-center items-center gap-4 w-[300px]"
-                >
-                  <div className="w-full">
-                    <Field
-                      type="text"
-                      className="w-full border-b rounded-sm px-4 py-2 outline-none bg-inherit"
-                      placeholder="Title"
-                      name="title"
-                    />
-                    <ErrorMessage name="title" component={Error} />
-                  </div>
-                  <div className=" w-full">
-
-                    <Field
-                      type="text"
-                      className="w-full bg-white border-b  rounded-sm px-4 py-2 outline-none"
-
-                      placeholder="Description"
-                      name="desc"
-                    />
-                    <ErrorMessage name="desc" component={Error} />
-                  </div>
-                  <div className=" flex gap-4 mb-4 sm:mb-10 xl:mb-20">
-                    <p className=" border-b border-green-500">Category</p>
-                    <select name="category" value={props.values.category} onChange={props.handleChange} onBlur={props.handleBlur} className=" bg-white">
-                      <option value="" disabled>select</option>
-                      {categories?.map((category, index) => (
-                        <>
-                          <option key={category._id} value={category.title}>{category.title}</option>
-                        </>
-                      ))}
-                    </select>
-                  </div>
-                  <button
-                    className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-sm hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200"
-                    type="submit"
-                    disabled={!props.isValid}
+          validationSchema={validationObject}
+        >
+          {(props) => {
+            props;
+            return (
+              <Form className=" flex flex-col justify-center items-center gap-4 w-[300px]">
+                <div className="w-full">
+                  <Field
+                    type="text"
+                    className="w-full border-b rounded-sm px-4 py-2 outline-none bg-inherit"
+                    placeholder="Title"
+                    name="title"
+                  />
+                  <ErrorMessage name="title" component={Error} />
+                </div>
+                <div className=" w-full">
+                  <Field
+                    type="text"
+                    className="w-full bg-white border-b  rounded-sm px-4 py-2 outline-none"
+                    placeholder="Description"
+                    name="desc"
+                  />
+                  <ErrorMessage name="desc" component={Error} />
+                </div>
+                <div className=" flex gap-4 mb-4 sm:mb-10 xl:mb-20">
+                  <p className=" border-b border-green-500">Category</p>
+                  <select
+                    name="category"
+                    value={props.values.category}
+                    onChange={props.handleChange}
+                    onBlur={props.handleBlur}
+                    className=" bg-white"
                   >
-                    UPDATE
-                  </button>
-                </Form>
-              )
-            }
-          }
+                    <option value="" disabled>
+                      select
+                    </option>
+                    {categories?.map((category, index) => (
+                      <>
+                        <option key={category._id} value={category.title}>
+                          {category.title}
+                        </option>
+                      </>
+                    ))}
+                  </select>
+                </div>
+                <button
+                  className=" text-white border active:translate-y-4  disabled:opacity-50 bg-gray-800 px-10 py-2 rounded-sm hover:text-black hover:bg-transparent hover:border hover:border-black transition-all duration-200"
+                  type="submit"
+                  disabled={!props.isValid}
+                >
+                  UPDATE
+                </button>
+              </Form>
+            );
+          }}
         </Formik>
       </div>
-      <div className={`flex gap-10 justify-center overflow-hidden relative  ${!images ? "items-center" : ""} mt-10 flex-col h-fit w-fit`}>
+      <div
+        className={`flex gap-10 justify-center overflow-hidden relative  ${
+          !images ? "items-center" : ""
+        } mt-10 flex-col h-fit w-fit`}
+      >
         <div className=" bg-white p-2 opacity-80 flex items-center gap-4 border-b border-green-500 w-fit">
           <p>Upload images</p>
           <IconButton>
-            <input className=" w-10 absolute opacity-0" type="file" onChange={imageHandler} />
-            <PhotoCamera/>
+            <input
+              className=" w-10 absolute opacity-0"
+              type="file"
+              onChange={imageHandler}
+            />
+            <PhotoCamera />
           </IconButton>
         </div>
         <div className="grid grid-cols-3">
-          {images && images.map((image, index) => (
-            <div className="relative" key={image}>
-              <img key={image} src={image} className='border-none w-[100px] h-[150px]' />
-              <button onClick={() => { removeImg(index) }}>
-                <CloseIcon className=" absolute top-0 right-0 cursor-pointer text-sm" />
-              </button>
-            </div>
-          ))}
+          {images &&
+            images.map((image, index) => (
+              <div className="relative" key={image}>
+                <img
+                  key={image}
+                  src={image}
+                  className="border-none w-[100px] h-[150px]"
+                />
+                <button
+                  onClick={() => {
+                    removeImg(index);
+                  }}
+                >
+                  <CloseIcon className=" absolute top-0 right-0 cursor-pointer text-sm" />
+                </button>
+              </div>
+            ))}
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 

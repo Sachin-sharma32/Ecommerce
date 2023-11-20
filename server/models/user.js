@@ -84,13 +84,13 @@ userSchema.methods.createTokens = async (user) => {
       id: user._id,
       isAdmin: user.isAdmin,
     },
-    "sachin1234",
+    process.env.JWT_SECRET,
     {
       expiresIn: "30m",
     }
   );
   //* refresh token
-  const refreshToken = jwt.sign({ id: user._id }, "sachin1234", {
+  const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: "100d",
   });
   return { token, refreshToken };

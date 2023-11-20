@@ -4,23 +4,17 @@ import { useSelector } from "react-redux";
 import { Product, State } from "../utils/types";
 
 export const useGetCollections = (onSuccess) => {
-  const token = useSelector((state: State) => state.auth.accessToken);
   return useQuery(
     "collections",
     () => {
-      return axios.get("http://localhost:8000/api/v1/collections", {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      });
+      return axios.get("http://localhost:8000/api/v1/collections");
     },
     {
       select: (data) => {
         const collections = data.data.data.docs;
         return collections;
       },
-      enabled: !!token,
-      onSuccess
+      onSuccess,
     }
   );
 };
@@ -31,26 +25,21 @@ export const useCreateCollection = (onSuccess: () => void, onError) => {
   return useMutation(
     "createCollection",
     (product: Product) => {
-      return axios.post(
-        "http://localhost:8000/api/v1/collections",
-        product,
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      return axios.post("http://localhost:8000/api/v1/collections", product, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
     },
     {
       onSuccess: () => {
         queryClient.invalidateQueries("collections");
-        onSuccess()
+        onSuccess();
       },
-      onError: onError
+      onError: onError,
     }
   );
 };
-
 
 export const useDeleteCollection = (onSuccess) => {
   const queryClient = useQueryClient();
@@ -74,7 +63,7 @@ export const useDeleteCollection = (onSuccess) => {
       },
       onSuccess: () => {
         queryClient.invalidateQueries("collections");
-        onSuccess()
+        onSuccess();
       },
     }
   );

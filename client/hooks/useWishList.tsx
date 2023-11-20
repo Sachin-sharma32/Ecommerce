@@ -6,14 +6,14 @@ import { State } from "../utils/types";
 
 export const useGetWishList = (userId: string) => {
   const dispatch = useDispatch();
-  const token = useSelector((state: State) => state.auth.accessToken)
+  const token = useSelector((state: State) => state.auth.accessToken);
   return useQuery(
     "getWishList",
     () => {
       return axios.get(`http://localhost:8000/api/v1/wishLists/${userId}`, {
         headers: {
-          authorization: `Bearer ${token}`
-        }
+          authorization: `Bearer ${token}`,
+        },
       });
     },
     {
@@ -31,12 +31,16 @@ export const useGetWishList = (userId: string) => {
   );
 };
 
-export const useAddToWishList = (wishListId: string, onSuccess?: () => void, onError?: (err) => void) => {
-  const dispatch = useDispatch()
-  const token = useSelector((state: State) => state.auth.accessToken)
+export const useAddToWishList = (
+  wishListId: string,
+  onSuccess?: () => void,
+  onError?: (err) => void
+) => {
+  const dispatch = useDispatch();
+  const token = useSelector((state: State) => state.auth.accessToken);
   return useMutation(
     "addToWishList",
-    (productObject: { productId: string, color: string, size: string }) => {
+    (productObject: { productId: string; color: string; size: string }) => {
       return axios.patch(
         `http://localhost:8000/api/v1/wishLists/addToWishList/${wishListId}`,
         {
@@ -45,43 +49,46 @@ export const useAddToWishList = (wishListId: string, onSuccess?: () => void, onE
           size: productObject.size,
         },
         {
-
           headers: {
-            authorization: `Bearer ${token}`
-          }
+            authorization: `Bearer ${token}`,
+          },
         }
       );
     },
     {
       enabled: !!wishListId,
       onSuccess: (data) => {
-        dispatch(setWishList(data.data.data.doc))
-        onSuccess()
+        dispatch(setWishList(data.data.data.doc));
+        onSuccess();
       },
-      onError: onError
+      onError: onError,
     }
   );
 };
 
-export const useRemoveFromWishList = (wishListId: string, onSuccess: (data: any) => void) => {
-  const token = useSelector((state: State) => state.auth.accessToken)
+export const useRemoveFromWishList = (
+  wishListId: string,
+  onSuccess: (data: any) => void
+) => {
+  const token = useSelector((state: State) => state.auth.accessToken);
   return useMutation(
     "removeFromWishList",
-    (product: { productId: string, }) => {
+    (product: { productId: string }) => {
       return axios.patch(
         `http://localhost:8000/api/v1/wishLists/removeFromWishList/${wishListId}`,
         {
           product: product.productId,
-        }, {
-        headers: {
-          authorization: `Bearer ${token}`
+        },
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
         }
-      }
       );
     },
     {
       enabled: !!wishListId,
-      onSuccess: onSuccess
+      onSuccess: onSuccess,
     }
   );
 };

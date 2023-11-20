@@ -13,30 +13,34 @@ import { create } from "@mui/material/styles/createTransitions";
 import { useCreateOrder } from "../hooks/useOrder";
 import SuccessModel from "../utils/successModel";
 import { useRouter } from "next/router";
-import EastIcon from '@mui/icons-material/East';
-import WestIcon from '@mui/icons-material/West';
-
+import EastIcon from "@mui/icons-material/East";
+import WestIcon from "@mui/icons-material/West";
 
 const Success = () => {
-
-    return (
-        <div className=" min-h-screen flex items-center justify-center text-xs text-center">
-            <div>
-                <h1 className="font-semibold text-lg">Order Placed SuccessFully</h1>
-                <p>Your order will be safely delivered to your doorsteps.</p>
-                <div className="flex justify-evenly">
-                    <Link href={`/`} className="flex items-center gap-2 hover:gap-4 transition-all duration-200">
-                        <WestIcon />
-                        <p>Home</p>
-                    </Link>
-                    <Link href={`/myOrders`} className="flex items-center gap-2 hover:gap-4 transition-all duration-200">
-                        <p>My Orders</p>
-                        <EastIcon />
-                    </Link>
-                </div>
-            </div>
+  return (
+    <div className=" min-h-screen flex items-center justify-center text-normal text-center">
+      <div>
+        <h1 className="font-semibold text-lg">Order Placed SuccessFully</h1>
+        <p>Your order will be safely delivered to your doorsteps.</p>
+        <div className="flex justify-evenly">
+          <Link
+            href={`/`}
+            className="flex items-center gap-2 hover:gap-4 transition-all duration-200"
+          >
+            <WestIcon />
+            <p>Home</p>
+          </Link>
+          <Link
+            href={`/myOrders`}
+            className="flex items-center gap-2 hover:gap-4 transition-all duration-200"
+          >
+            <p>My Orders</p>
+            <EastIcon />
+          </Link>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Success;

@@ -1,87 +1,123 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import EastIcon from '@mui/icons-material/East';
-import Smooth from '../utils/smooth'
-import ProductListCard from './ProductListCard'
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import EastIcon from "@mui/icons-material/East";
+import Smooth from "../utils/smooth";
+import ProductListCard from "./ProductListCard";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation, Autoplay, EffectCoverflow, Keyboard } from "swiper";
+import {
+  Pagination,
+  Navigation,
+  Autoplay,
+  EffectCoverflow,
+  Keyboard,
+} from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-coverflow";
-import Link from 'next/link';
-
+import Link from "next/link";
+import LeftArrow from "../utils/LeftArrow";
+import RightArrow from "../utils/RightArrow";
+import Button3 from "../utils/Button3";
 
 const Collections = () => {
-  const categories = useSelector((state) => state.auth.categories)
-  const collections = useSelector((state) => state.auth.collections)
-  const products = useSelector((state) => state.auth.products)
-  const selectedCategory = useSelector((state) => state.auth.selectedCategory)
-  const [filterCollection, setFilterCollection] = useState([])
+  const categories = useSelector((state) => state.auth.categories);
+  const collections = useSelector((state) => state.auth.collections);
+  console.log(collections);
+  const products = useSelector((state) => state.auth.products);
+  const selectedCategory = useSelector((state) => state.auth.selectedCategory);
+  const [filterCollection, setFilterCollection] = useState([]);
   useEffect(() => {
     if (selectedCategory) {
-      setFilterCollection(collections.filter((collection) => {
-        return collection.category == selectedCategory.title
-      }))
+      setFilterCollection(
+        collections.filter((collection) => {
+          return collection.category == selectedCategory.title;
+        })
+      );
     } else {
-      setFilterCollection(collections)
+      setFilterCollection(collections);
     }
-  }, [filterCollection, collections, selectedCategory])
+  }, [filterCollection, collections, selectedCategory]);
+
+  const [num, setNum] = useState(0);
+
+  const data = [
+    [
+      "https://fabricofsociety.luxury/cdn/shop/files/FOS-ARI-WSWS39S23P55R4107-BARW_1200x.jpg?v=1683532300",
+      "https://fabricofsociety.luxury/cdn/shop/products/FOS-SRVC-WHNS31S23P62S2102-AFLATLAY_500x.jpg?v=1677615012",
+    ],
+    [
+      "https://fabricofsociety.luxury/cdn/shop/files/FOS-ARI-WSWS31S23P55R4105-B_1200x.jpg?v=1683532277",
+      "https://fabricofsociety.luxury/cdn/shop/products/FOS-SRVC-WHNS39S23P62S2103_500x.jpg?v=1680599113",
+    ],
+    [
+      "https://fabricofsociety.luxury/cdn/shop/files/FOS-SRVC-WHNS39S23P62S2103-B_1200x.jpg?v=1683534221",
+      "https://fabricofsociety.luxury/cdn/shop/files/FOS-ARI-WSWS31S23P55R4105-Aflatlay_500x.jpg?v=1683532277",
+    ],
+    [
+      "https://fabricofsociety.luxury/cdn/shop/products/FOS-SRVC-WHNS31S23P62S2102-B_1200x.jpg?v=1677616443",
+      "https://fabricofsociety.luxury/cdn/shop/files/FOS-ARI-WSWS39S23P55R4107-Aflatlay_500x.jpg?v=1683532300",
+    ],
+    [
+      "https://fabricofsociety.luxury/cdn/shop/files/FOS-ARI-WSWS39S23P55R4107-BARW_1200x.jpg?v=1683532300",
+      "https://fabricofsociety.luxury/cdn/shop/products/FOS-SRVC-WHNS31S23P62S2102-AFLATLAY_500x.jpg?v=1677615012",
+    ],
+    [
+      "https://fabricofsociety.luxury/cdn/shop/files/FOS-ARI-WSWS31S23P55R4105-B_1200x.jpg?v=1683532277",
+      "https://fabricofsociety.luxury/cdn/shop/products/FOS-SRVC-WHNS39S23P62S2103_500x.jpg?v=1680599113",
+    ],
+    [
+      "https://fabricofsociety.luxury/cdn/shop/files/FOS-SRVC-WHNS39S23P62S2103-B_1200x.jpg?v=1683534221",
+      "https://fabricofsociety.luxury/cdn/shop/files/FOS-ARI-WSWS31S23P55R4105-Aflatlay_500x.jpg?v=1683532277",
+    ],
+    [
+      "https://fabricofsociety.luxury/cdn/shop/products/FOS-SRVC-WHNS31S23P62S2102-B_1200x.jpg?v=1677616443",
+      "https://fabricofsociety.luxury/cdn/shop/files/FOS-ARI-WSWS39S23P55R4107-Aflatlay_500x.jpg?v=1683532300",
+    ],
+  ];
 
   return (
-    <Smooth className=' flex flex-col gap-10 mt-10'>
-      {filterCollection?.map((collection, index) => (
-        <div key={collection._id} className=' flex flex-col items-center gap-4'>
-          <div className='flex flex-col items-center gap-0'>
-            <p className=' uppercase text-xl cursor-default'>{collection.title}</p>
-            <Link href={`/search/${collection.title}`} className=' text-xs flex items-center gap-1 hover:gap-4 cursor-pointer transition-all duration-200'>Checkout All Products<EastIcon /></Link>
-          </div>
-          <div className='w-[100%]'>
-            <Swiper
-              breakpoints={{
-                0: {
-                  slidesPerView: 3,
-                  spaceBetween: 10
-                },
-                600: {
-                  slidesPerView: 4,
-                  spaceBetween: 10
-                },
-                1000: {
-                  slidesPerView: 5,
-                  spaceBetween: 10
-                },
-              }}
-              slidesPerView={5}
-              spaceBetween={30}
-              navigation={true}
-              grabCursor={true}
-              loop={true}
-              pagination={{
-                clickable: true,
-              }}
-              keyboard={{
-                enabled: true,
-              }}
-              modules={[Pagination, Navigation, Autoplay, Keyboard]}
-              className="mySwiper"
-              autoplay={{
-                delay: 3000,
-                disableOnInteraction: false,
-                reverseDirection: index % 2 === 0 ? true : false
-              }}
+    <Smooth className=" flex flex-col gap-10 bg-[#fafafa] py-10">
+      <div className="w-[100%] flex flex-col gap-14">
+        {[0]?.map((collection, index) => (
+          <div
+            key={collection._id}
+            className=" flex flex-col items-center gap-6"
+          >
+            <div className="flex flex-col items-center gap-0 p-6">
+              <p className=" uppercase text-2xl cursor-default font-monumentRegular">
+                New In
+              </p>
+              <div>All new in Shremz this week</div>
+            </div>
+            <div className="w-[100%]">
+              <div className=" relative overflow-hidden w-screen">
+                <div
+                  className={`md:flex grid grid-cols-2 gap-y-4 md:grid-cols-none  md:gap-[2vw] transition-all duration-500 w-screen justify-center`}
+                  style={{ transform: `translateX(calc(-25vw * ${num}))` }}
+                >
+                  {data.map((product, i) => (
+                    <ProductListCard product={product} key={i} />
+                  ))}
+                </div>
+                <div className=" absolute top-1/2 scale-150 left-10 -translate-y-1/2">
+                  <LeftArrow max={4} num={num} setNum={setNum} />
+                </div>
+                <div className=" absolute top-1/2 scale-150 right-10 -translate-y-1/2">
+                  <RightArrow max={4} num={num} setNum={setNum} />
+                </div>
+              </div>
+            </div>
+            <button
+              className={`w-[170px] bg-[#1e4732] text-white h-[50px] px-10 py-4 flex items-center justify-center gap-10 relative group `}
             >
-              {products?.filter((product) => product.collectionName === collection.title).map(product => (
-                <SwiperSlide key={product._id} className=' mb-10'>
-                  <ProductListCard product={product} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+              Shop Now
+            </button>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </Smooth>
-  )
-}
+  );
+};
 
-export default Collections
+export default Collections;

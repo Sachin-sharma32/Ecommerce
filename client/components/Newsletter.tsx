@@ -1,30 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import { TextField } from "@mui/material";
 import { useSelector } from "react-redux";
+import SuccessModel from "../utils/successModel";
+import ErrorModel from "../utils/errorModel";
+import Link from "next/link";
+import Button3 from "../utils/Button3";
 
 const Newsletter = () => {
-    const user = useSelector((state) => state.auth.user);
-    return (
-        <div className=" bg-gray-200 my-10 flex flex-col justify-center items-center p-40 mb-0 gap-10 checkout__background text-xs">
-            <div className=" w-[100%] flex flex-col gap-4 items-center">
-                <div className="flex flex-col items-center cursor-pointer">
-                    <h2 className=" text-lg sm:text-lg font-semibold text-center hover:scale-150 transition-all duration-500">
-                        HAVE ANY QUERIES
-                    </h2>
-                    <p className=" text-[10px] text-gray-500">Send us an email and we will do our best to solve your problem.</p>
-                </div>
-                <input defaultValue={user?.email ? user?.email : ''} type="email" className=" bg-white outline-none p-2 rounded-sm focus:shadow-xl w-[500px] transition-all duration-500 border-b-4 border-transparent focus:border-gray-500 focus:invalid:border-red-500" placeholder="sachin2sharma001@gmail.com" />
-                <textarea rows={5} minLength={10} type="text" className=" bg-white outline-none p-2 resize-none rounded-sm focus:shadow-xl w-[500px] transition-all duration-500 border-b-4 border-transparent focus:border-gray-500 focus:invalid:border-red-500" placeholder="Try to keep your query to the point and short for better response" />
-                <div className=" flex items-center gap-4">
-                    <button className=" bg-black text-white border transition-all duration-200 border-transparent hover:bg-transparent hover:text-black hover:border-black px-10 py-2"> SEND MAIL</button>
-                    <p>OR</p>
-                    <a href="/"><img src='/fb.png' alt="" className=" w-10"/></a>
-                    <a href="/"><img src='/insta.png' alt="" className=" w-10"/></a>
-                </div>
-            </div>
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+  useEffect(() => {
+    setTimeout(() => {
+      setError(false);
+      setSuccess(false);
+    }, 3000);
+  }, [success, error]);
+  const [message, setMessage] = useState("");
+  const [query, setQuery] = useState("");
+  const user = useSelector((state) => state.auth.user);
+  return (
+    <div className=" bg-gray-200 py-10 flex flex-col justify-center items-center p-4 md:p-40 mb-0 gap-10 checkout__background text-normal">
+      {success && <SuccessModel>{message}</SuccessModel>}
+      {error && <ErrorModel>{message}</ErrorModel>}
+      <div className="text-white flex flex-col gap-4">
+        <h3 className="text-2xl  text-center font-monumentRegular">
+          Sign up to be the first to know about what&npsp;s new on Shremz
+        </h3>
+        <div className="flex">
+          <input
+            type="text"
+            className=" p-3 w-full bg-white"
+            placeholder="Email Address"
+          />
+          <Button3
+            title={"Subscribe"}
+            className={"bg-[#1e4732] text-white"}
+            href={"/"}
+          />
         </div>
-    );
+        <p className="w-[70%] mx-auto text-center">
+          By clicking Subscribe you are confirming the you agree with our Terms
+          and Conditions
+        </p>
+      </div>
+    </div>
+  );
 };
 
 export default React.memo(Newsletter);

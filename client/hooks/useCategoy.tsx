@@ -4,23 +4,17 @@ import { useSelector } from "react-redux";
 import { Product, State } from "../utils/types";
 
 export const useGetCategories = (onSuccess) => {
-  const token = useSelector((state: State) => state.auth.accessToken);
   return useQuery(
     "categories",
     () => {
-      return axios.get("http://localhost:8000/api/v1/categories", {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      });
+      return axios.get("http://localhost:8000/api/v1/categories");
     },
     {
       select: (data) => {
         const categories = data.data.data.docs;
         return categories;
       },
-      enabled: !!token,
-      onSuccess: onSuccess
+      onSuccess: onSuccess,
     }
   );
 };
@@ -31,26 +25,21 @@ export const useCreateCategory = (onSuccess: () => void, onError) => {
   return useMutation(
     "createCategory",
     (category) => {
-      return axios.post(
-        "http://localhost:8000/api/v1/categories",
-        category,
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      return axios.post("http://localhost:8000/api/v1/categories", category, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
     },
     {
       onSuccess: () => {
         queryClient.invalidateQueries("categories");
-        onSuccess()
+        onSuccess();
       },
-      onError: onError
+      onError: onError,
     }
   );
 };
-
 
 export const useDeleteCategory = (onSuccess) => {
   const queryClient = useQueryClient();
@@ -74,7 +63,7 @@ export const useDeleteCategory = (onSuccess) => {
       },
       onSuccess: () => {
         queryClient.invalidateQueries("collections");
-        onSuccess()
+        onSuccess();
       },
     }
   );
