@@ -59,6 +59,8 @@ const authSlice = createSlice({
     },
 });
 
+console.log("hello world")
+
 export const {
     setUser,
     addProducts,
